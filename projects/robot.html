@@ -7,7 +7,7 @@
   <meta name="description" content="A tank-style robot built with Arduino and servos, by Brendan Nussenblatt." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" />
   <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
@@ -25,8 +25,8 @@
 
 <main class="container">
   <section class="case-hero">
-    <a class="back-link" href="../index.html#work">← All projects</a><br />
-    <span class="project-label">Hardware</span>
+    <a class="back-link" href="../index.html#work">Back to all projects</a>
+    <p class="case-context">Physical computing project</p>
     <h1>Arduino Tank Robot</h1>
     <p class="lede">
       A hardware and software build using Arduino and servos to create a tank-style robot with scripted movement.
@@ -63,23 +63,20 @@
       </section>
     </div>
 
-    <aside class="case-meta">
-      <div>
-        <h3>Tools</h3>
-        <p>Arduino, servo control, hardware prototyping</p>
-      </div>
-      <div>
-        <h3>Demo videos</h3>
-        <div class="link-list">
-          <a class="btn" href="https://www.youtube.com/shorts/_yZ6QxN1khE" target="_blank" rel="noopener">Full demo <span>↗</span></a>
-          <a class="btn" href="https://www.youtube.com/shorts/O3mmKBC_QBc" target="_blank" rel="noopener">Wiring walkthrough <span>↗</span></a>
-        </div>
+    <aside>
+      <dl class="specs">
+        <div><dt>Built with</dt><dd>Arduino, servo motors</dd></div>
+        <div><dt>Skills</dt><dd>Hardware prototyping, debugging</dd></div>
+      </dl>
+      <div class="case-links">
+        <a href="https://www.youtube.com/shorts/_yZ6QxN1khE" target="_blank" rel="noopener">Watch the full demo</a>
+        <a href="https://www.youtube.com/shorts/O3mmKBC_QBc" target="_blank" rel="noopener">Watch the wiring walkthrough</a>
       </div>
     </aside>
   </div>
 </main>
 
-<footer class="site-footer">© <span id="year">2026</span> Brendan Nussenblatt</footer>
+<footer class="site-footer"><div class="container">© <span id="year">2026</span> Brendan Nussenblatt</div></footer>
 
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();

@@ -7,7 +7,7 @@
   <meta name="description" content="A multi-page archive of Spider-Man's history, designed and built by Brendan Nussenblatt." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" />
   <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
@@ -25,15 +25,13 @@
 
 <main class="container">
   <section class="case-hero">
-    <a class="back-link" href="../index.html#work">← All projects</a><br />
-    <span class="project-label">Web</span>
+    <a class="back-link" href="../index.html#work">Back to all projects</a>
+    <p class="case-context">Multi-page website</p>
     <h1>Spider-Man History Website</h1>
     <p class="lede">
       A multi-page site that organizes Spider-Man's evolution by decade, creators, characters, and key moments.
     </p>
-    <div class="hero-actions">
-      <a class="btn btn-primary" href="spiderman/" target="_blank" rel="noopener">View the live website ↗</a>
-    </div>
+    <a class="button" href="spiderman/" target="_blank" rel="noopener">Open the live website</a>
   </section>
 
   <img class="case-cover" src="../assets/images/swinging_spiderman_cover.webp" alt="Spider-Man swinging through the city" />
@@ -67,20 +65,16 @@
       </section>
     </div>
 
-    <aside class="case-meta">
-      <div>
-        <h3>Tools</h3>
-        <p>HTML, CSS, JavaScript, responsive layout</p>
-      </div>
-      <div>
-        <h3>Focus</h3>
-        <p>Information architecture, navigation, visual hierarchy</p>
-      </div>
+    <aside>
+      <dl class="specs">
+        <div><dt>Built with</dt><dd>HTML, CSS, JavaScript</dd></div>
+        <div><dt>Focus</dt><dd>Information architecture, navigation, visual hierarchy</dd></div>
+      </dl>
     </aside>
   </div>
 </main>
 
-<footer class="site-footer">© <span id="year">2026</span> Brendan Nussenblatt</footer>
+<footer class="site-footer"><div class="container">© <span id="year">2026</span> Brendan Nussenblatt</div></footer>
 
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
