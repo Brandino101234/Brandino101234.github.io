@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Arduino Tank Robot | Brendan Nussenblatt</title>
+  <meta name="description" content="A tank-style robot built with Arduino and servos, by Brendan Nussenblatt." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="logo" href="../index.html">Brendan Nussenblatt</a>
+    <nav class="nav">
+      <a href="../index.html#work">Work</a>
+      <a href="../assets/resume/brendan-nussenblatt-resume.pdf" target="_blank" rel="noopener">Resume</a>
+      <a href="../index.html#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <section class="case-hero">
+    <a class="back-link" href="../index.html#work">← All projects</a><br />
+    <span class="project-label">Hardware</span>
+    <h1>Arduino Tank Robot</h1>
+    <p class="lede">
+      A hardware and software build using Arduino and servos to create a tank-style robot with scripted movement.
+    </p>
+  </section>
+
+  <img class="case-cover" src="../assets/images/arduino2.jpg" alt="Arduino tank robot" />
+
+  <div class="case-grid">
+    <div>
+      <section>
+        <h2>Overview</h2>
+        <p>
+          I built a small tank robot (nicknamed "Turny") that uses servo motors for movement and an Arduino for
+          control logic. The goal was to create reliable, repeatable motion sequences and test basic interaction patterns.
+        </p>
+      </section>
+
+      <section>
+        <h2>What I did</h2>
+        <ul>
+          <li>Wired and configured servo motors and controls, including button-triggered sequences</li>
+          <li>Wrote Arduino code to run consistent movement patterns and timing</li>
+          <li>Debugged and tuned inputs, delays, and movement for reliability</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Outcome</h2>
+        <p>
+          This project improved my comfort with hardware debugging and reinforced how to translate an idea into a
+          testable system.
+        </p>
+      </section>
+    </div>
+
+    <aside class="case-meta">
+      <div>
+        <h3>Tools</h3>
+        <p>Arduino, servo control, hardware prototyping</p>
+      </div>
+      <div>
+        <h3>Demo videos</h3>
+        <div class="link-list">
+          <a class="btn" href="https://www.youtube.com/shorts/_yZ6QxN1khE" target="_blank" rel="noopener">Full demo <span>↗</span></a>
+          <a class="btn" href="https://www.youtube.com/shorts/O3mmKBC_QBc" target="_blank" rel="noopener">Wiring walkthrough <span>↗</span></a>
+        </div>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<footer class="site-footer">© <span id="year">2026</span> Brendan Nussenblatt</footer>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
