@@ -257,21 +257,31 @@ header {
     margin-block: 32px 24px;
 }
 
-#decades {
+#decadeCarousel {
     --f-carousel-gap: 1.4rem;
+    --f-carousel-slide-width: calc((100% - 3 * var(--f-carousel-gap)) / 4);
     margin-top: 1.25rem;
 }
 
-#decades .f-carousel__slide {
-    display: flex;
-    justify-content: center;
+/* Arrows sit on top of bright covers, so give them a solid backing */
+#decadeCarousel .f-button.is-arrow {
+    background: rgba(11, 14, 20, 0.82);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 50%;
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
 }
 
+#decadeCarousel .f-button.is-arrow:hover { background: var(--red); }
+#decadeCarousel .f-button.is-arrow[aria-disabled] { opacity: 0.35; pointer-events: none; }
 
+@media (max-width: 900px) {
+    #decadeCarousel { --f-carousel-slide-width: calc((100% - var(--f-carousel-gap)) / 2); }
+}
 
-
-
-
+@media (max-width: 560px) {
+    #decadeCarousel { --f-carousel-slide-width: 85%; }
+}
 
 /* ===== Home: Highlights ===== */
 
@@ -613,7 +623,7 @@ header {
         margin-block: 24px 24px;
     }
 
-    #decades {
+    #decadeCarousel {
         margin-top: 0.75rem;
     }
 
