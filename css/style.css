@@ -164,6 +164,8 @@ p { margin: 0 0 1em; max-width: 68ch; }
 
 .listing-photo img { width: 100%; height: 100%; object-fit: cover; }
 .listing-photo.tall { aspect-ratio: 4 / 5; max-width: 520px; }
+.listing-photo.fit-dark { background: #0c0b10; }
+.listing-photo.fit-dark img { object-fit: contain; }
 .listing-photo.tall img { object-position: 50% 30%; }
 .listing-photo.logo-photo { padding: 12%; background: #fff; border: 1px solid var(--rule); }
 .listing-photo.logo-photo img { object-fit: contain; mix-blend-mode: multiply; }
@@ -332,3 +334,5 @@ p { margin: 0 0 1em; max-width: 68ch; }
   .jobs .who { padding: 0 0 8px; }
   .specs div { grid-template-columns: 6.5em 1fr; }
 }
+
+.subhead { font-size: 1.2rem; margin-bottom: 10px; }
