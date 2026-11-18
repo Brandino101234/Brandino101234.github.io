@@ -18,8 +18,8 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%230f0c24'/><text x='50%' y='56%' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-weight='800' font-size='30' fill='%23ffb020'>BN</text></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&display=swap" />
-  <link rel="stylesheet" href="./css/style.css?v=clean3" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&family=Big+Shoulders+Display:wght@700;800;900&family=Doto:wght@700;900&display=swap" />
+  <link rel="stylesheet" href="./css/style.css?v=city4" />
 </head>
 <body class="home">
 
@@ -40,8 +40,10 @@
     <!-- A low-poly Times Square in 3D (js/city.js). Each billboard is a designed
          ad for a project; click one to fly to it. -->
     <section class="city" id="work" aria-label="Work: an interactive 3D Times Square">
-      <h1 class="visually-hidden">Brendan Nussenblatt, designer</h1>
-      <p class="city-hint"><span class="hint-wide">Drag sideways to look around. Click any billboard to open it.</span><span class="hint-narrow">Swipe sideways to see more. Tap a billboard to open it.</span></p>
+      <div class="city-overlay">
+        <h1>Brendan Nussenblatt</h1>
+        <p>Designer, New York. Drag to look around, then click a billboard.</p>
+      </div>
       <span class="city-tip" aria-hidden="true"></span>
       <aside class="city-panel" hidden aria-live="polite">
         <span class="kicker"></span>
@@ -73,7 +75,7 @@
       </section>
 
       <section class="section" id="projects">
-        <h2>Projects</h2>
+        <h2>Now showing</h2>
         <ol class="playbill">
           <li><a href="https://zion.luddy.indiana.edu/info-capstone-2026/journey" target="_blank" rel="noopener"><strong>Journey</strong><span>Capstone. Child growth and nutrition tracking for parents and healthcare providers.</span></a></li>
           <li><a href="projects/spiderman.html"><strong>Spider-History</strong><span>Web design. A 12-page Spider-Man archive organized by decade, creators, and villains.</span></a></li>
@@ -142,7 +144,7 @@
       }
     }
   </script>
-  <script type="module" src="js/city.js?v=23"></script>
+  <script type="module" src="js/city.js?v=24"></script>
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>

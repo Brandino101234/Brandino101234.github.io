@@ -1,10 +1,13 @@
-// A low-poly Times Square, facing One Times Square head-on.
-// Every billboard is an ad for one of Brendan's projects, drawn on a canvas in
-// one shared layout. The tower is the centerpiece; the flanking buildings carry
-// the rest of the work, laid out so no two billboards overlap.
+// A low-poly Times Square, looking south at One Times Square.
+// Every billboard is a designed ad for one of Brendan's projects, drawn on a
+// canvas in one shared layout so the whole scene reads as one designed object.
 
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
+import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 
 const mount = document.querySelector(".city");
 const panel = document.querySelector(".city-panel");
@@ -12,66 +15,66 @@ const tip = document.querySelector(".city-tip");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 // ---------- The ads ----------
-// bg/ink: the ad's background and headline color. dark/light: the colors
-// used by its drawn key visual.
+// Each ad: what it links to, its two-tone palette, and its copy.
 const ADS = [
   { id: "name", kind: "name" },
   { id: "journey", title: "Journey", kicker: "Capstone, 2026", headline: "Every inch counts.",
     sub: "Child growth and nutrition, made clear for parents and doctors.",
-    art: "journey", bg: "#0e4d33", ink: "#ffffff", dark: "#06281a", light: "#8ff0b4",
+    art: "journey",
+    bg: "#0e4d33", dark: "#06281a", light: "#8ff0b4", ink: "#ffffff",
     href: "https://zion.luddy.indiana.edu/info-capstone-2026/journey", external: true,
     blurb: "My Informatics capstone at Indiana University: a platform that helps parents and healthcare providers track a child's growth and nutrition, spot concerning trends early, and get health alerts." },
-  { id: "spider", title: "Spider-History", kicker: "Web design", headline: "Spider-Man, from 1962 to now.",
-    sub: "A 12-page archive organized by decade, creators, and villains.",
-    img: "assets/images/swinging_spiderman_cover.webp", focusY: 0.25,
-    bg: "#b5121b", ink: "#ffffff",
+  { id: "spider", title: "Spider-History", kicker: "Web design", headline: "60 years. One web.",
+    sub: "A 12-page archive of Spider-Man's history.",
+    img: "assets/images/swinging_spiderman_cover.webp",
+    bg: "#b5121b", dark: "#3d0509", light: "#ffd84a", ink: "#ffffff",
     href: "projects/spiderman.html",
     blurb: "A multi-page site that organizes Spider-Man's history by decade, creators, and villains, built around clear information architecture and consistent navigation." },
-  { id: "ots", title: "Fortnite × One Times Square", kicker: "Fly Studio", headline: "New Year's Eve in Times Square, built in Fortnite.",
-    sub: "2M+ views on Fortnite's official Instagram.",
-    img: "assets/images/OTS2.jpg", focusY: 0.3,
-    bg: "#1f2bd8", ink: "#ffffff",
+  { id: "ots", title: "Fortnite × One Times Square", kicker: "Fly Studio", headline: "2 million views. One ball drop.",
+    sub: "A New Year's Eve Fortnite map for Times Square.",
+    img: "assets/images/OTS2.jpg",
+    bg: "#1f2bd8", dark: "#0a0d45", light: "#ff5ad6", ink: "#ffffff",
     href: "projects/fortnite.html",
     blurb: "At Fly Studio I designed and launched a custom Fortnite Creative map for a New Year's Eve campaign with One Times Square. It reached 2M+ views on Fortnite's official Instagram." },
-  { id: "lego", title: "LEGO Intelligence Agent", kicker: "Dashboard", headline: "Know which sets retire next.",
-    sub: "New releases and retiring sets, tracked automatically.",
-    art: "lego", bg: "#ffcc00", ink: "#1b1300", dark: "#1b1300", light: "#fff3b0",
+  { id: "lego", title: "LEGO Intelligence Agent", kicker: "Dashboard", headline: "Never miss a brick.",
+    sub: "Release dates and retiring sets, tracked automatically.",
+    art: "lego",
+    bg: "#ffcc00", dark: "#1b1300", light: "#fff3b0", ink: "#1b1300",
     href: "https://brandino101234.github.io/lego-intelligence-agent/", external: true,
     blurb: "A dashboard that tracks upcoming LEGO releases, sets about to retire, gifts with purchase, and the BrickLink Designer Program. Python scrapers run on a schedule and rebuild it automatically." },
-  { id: "brandinos", title: "BrandinosBuilds", kicker: "Brand and content design", headline: "LEGO videos, posted daily.",
-    sub: "Thumbnails, channel art, and series formats for TikTok, Instagram, and YouTube.",
-    art: "brandinos", bg: "#ff5a1f", ink: "#ffffff", dark: "#3a1103", light: "#ffe2c9",
+  { id: "brandinos", title: "BrandinosBuilds", kicker: "Brand and content design", headline: "Brick by brick.",
+    sub: "Thumbnails, channel art, and series formats for a LEGO brand.",
+    art: "brandinos",
+    bg: "#ff5a1f", dark: "#3a1103", light: "#ffe2c9", ink: "#ffffff",
     href: "about.html",
     blurb: "I founded BrandinosBuilds and design all of its visual content across TikTok, Instagram, and YouTube: thumbnails, channel art, in-video graphics, and recurring series like Brick Blur." },
-  { id: "vr", title: "Mindfulness in VR", kicker: "VR, Unity", headline: "Meditation, in virtual reality.",
-    sub: "An immersive experience built in Unity.",
-    art: "vr", bg: "#5a2bd6", ink: "#ffffff", dark: "#1a0b47", light: "#a6ecff",
+  { id: "vr", title: "Mindfulness in VR", kicker: "VR, Unity", headline: "Breathe in. Log out.",
+    sub: "An immersive meditation experience.",
+    art: "vr",
+    bg: "#5a2bd6", dark: "#1a0b47", light: "#a6ecff", ink: "#ffffff",
     href: "https://www.youtube.com/watch?v=U2gG0RcOsK4", external: true,
     blurb: "A virtual reality meditation experience built in Unity, with interactive environments and calming visuals designed to help people relax." },
-  { id: "draft", title: "Draft DNA", kicker: "Data app", headline: "Every NBA pick since 1996, graded.",
-    sub: "Draft-night projections that update as careers unfold.",
-    art: "draft", bg: "#0d1530", ink: "#ffffff", dark: "#06102a", light: "#4aa3ff",
+  { id: "draft", title: "Draft DNA", kicker: "Data app", headline: "Draft night, decoded.",
+    sub: "Career projections for 1,833 NBA picks.",
+    art: "draft",
+    bg: "#0d1530", dark: "#06102a", light: "#4aa3ff", ink: "#ffffff",
     href: "https://draft-dna.streamlit.app", external: true,
     blurb: "An NBA draft analytics app. Every pick since 1996 gets a projection from draft-night data only, then a grade as his career unfolds, with prospect cards for 1,833 players." },
   { id: "robot", title: "Arduino Tank Robot", kicker: "Hardware", headline: "Meet Turny.",
-    sub: "A servo-driven tank robot built with Arduino.",
-    art: "robot", bg: "#c6ff3d", ink: "#14213d", dark: "#14213d", light: "#f4ffd6",
+    sub: "A servo-driven tank robot.",
+    art: "robot",
+    bg: "#c6ff3d", dark: "#14213d", light: "#f4ffd6", ink: "#14213d",
     href: "projects/robot.html",
     blurb: "A small tank robot I built with Arduino and servo motors, with button-triggered movement sequences and a lot of hardware debugging." },
   { id: "about", title: "About me", kicker: "Indiana University, 2026", headline: "Hi, I'm Brendan.",
-    sub: "Designer, LEGO builder, IRONMAN 70.3 finisher.",
-    img: "assets/images/about/sample-gates.jpg", focusY: 0.25,
-    bg: "#14213d", ink: "#ffffff",
+    sub: "Designer. LEGO builder. IRONMAN 70.3 finisher.",
+    img: "assets/images/about/sample-gates.jpg", focusY: 0.3,
+    bg: "#14213d", dark: "#0a1122", light: "#ffcf5a", ink: "#ffffff",
     href: "about.html",
     blurb: "I'm a designer and Informatics graduate from Indiana University, with minors in Business and Financial Literacy from the Kelley School. Outside of work: LEGO, triathlons, and basketball." },
-  { id: "resume", kind: "text", title: "Resume", kicker: "PDF, one page", headline: "Resume", sub: "One page. Open the PDF.",
-    bg: "#ffffff", ink: "#14213d",
+  { id: "resume", kind: "led", title: "Resume", kicker: "PDF, one page", headline: "Now hiring?", sub: "Read the resume",
     href: "assets/resume/brendan-nussenblatt-resume.pdf", external: true,
     blurb: "My one-page resume, as a PDF." },
-  { id: "contact", kind: "text", title: "Contact", kicker: "Email", headline: "Let's talk.", sub: "brendannussenblatt@gmail.com",
-    bg: "#e8412c", ink: "#ffffff",
-    href: "mailto:brendannussenblatt@gmail.com",
-    blurb: "Email is the best way to reach me. I'm happy to walk through any of these projects." },
 ];
 const AD = Object.fromEntries(ADS.map((a) => [a.id, a]));
 
@@ -167,7 +170,7 @@ function drawDraftArt(ctx, x, y, w, h, ad) {
   // Labels under the bar
   ctx.fillStyle = "#ffffff";
   ctx.textBaseline = "top";
-  ctx.font = `800 ${Math.round(h * 0.055)}px "Archivo"`;
+  ctx.font = `800 ${Math.round(h * 0.055)}px "Big Shoulders Display"`;
   ctx.textAlign = "left";
   ctx.fillText("FLOOR", lo - h * 0.02, barY + h * 0.05);
   ctx.textAlign = "right";
@@ -226,12 +229,12 @@ function drawLegoArt(ctx, x, y, w, h, ad) {
     ctx.textBaseline = "top";
     ctx.font = `700 ${Math.round(tileH * 0.24)}px "Archivo", sans-serif`;
     ctx.fillText(m, tx + tileW / 2, stripY + tileH * 0.12);
-    ctx.font = `900 ${Math.round(tileH * 0.5)}px "Archivo"`;
+    ctx.font = `900 ${Math.round(tileH * 0.5)}px "Big Shoulders Display"`;
     ctx.fillText(d, tx + tileW / 2, stripY + tileH * 0.4);
   });
 
   // Tags above the first and last tiles
-  ctx.font = `800 ${Math.round(h * 0.05)}px "Archivo"`;
+  ctx.font = `800 ${Math.round(h * 0.05)}px "Big Shoulders Display"`;
   ctx.textAlign = "left";
   ctx.fillStyle = "#ffcc00";
   ctx.fillText("NEW", x + w * 0.07, stripY - h * 0.065);
@@ -253,7 +256,7 @@ function artFrame(ctx, x, y, w, h, ad) {
   ctx.fillRect(x, y, w, h);
 }
 function artLabel(ctx, text, tx, ty, size, color, align = "left") {
-  ctx.font = `800 ${Math.round(size)}px "Archivo"`;
+  ctx.font = `800 ${Math.round(size)}px "Big Shoulders Display"`;
   ctx.fillStyle = color;
   ctx.textAlign = align;
   ctx.textBaseline = "top";
@@ -373,7 +376,7 @@ function drawOtsArt(ctx, x, y, w, h, ad) {
   }
   ctx.beginPath(); ctx.arc(bx, by, br * 0.55, 0, Math.PI * 2); ctx.stroke();
   // 2M+
-  ctx.font = `900 ${Math.round(h * 0.2)}px "Archivo"`;
+  ctx.font = `900 ${Math.round(h * 0.2)}px "Big Shoulders Display"`;
   ctx.fillStyle = "#ffffff";
   ctx.textAlign = "left";
   ctx.textBaseline = "top";
@@ -472,13 +475,7 @@ function drawBrandinosArt(ctx, x, y, w, h, ad) {
   ctx.lineTo(fx + fw / 2 - fh * 0.06, fy + fh / 2 + fh * 0.1);
   ctx.closePath();
   ctx.fill();
-  let ls = h * 0.055;
-  ctx.font = `800 ${Math.round(ls)}px "Archivo"`;
-  while (ctx.measureText("TikTok   Instagram   YouTube").width > fw && ls > 8) {
-    ls -= 1;
-    ctx.font = `800 ${Math.round(ls)}px "Archivo"`;
-  }
-  artLabel(ctx, "TikTok   Instagram   YouTube", x + w / 2, fy + fh + h * 0.05, ls, ad.light, "center");
+  artLabel(ctx, "TIKTOK  INSTAGRAM  YOUTUBE", x + w / 2, fy + fh + h * 0.05, h * 0.055, ad.light, "center");
   ctx.restore();
 }
 
@@ -501,69 +498,54 @@ function wrap(ctx, text, maxW) {
   return lines;
 }
 
-function fitHeadline(ctx, text, maxW, maxH, startSize, weight = 800) {
+function fitHeadline(ctx, text, maxW, maxH, startSize) {
   let size = startSize;
   let lines;
   do {
-    ctx.font = `${weight} ${size}px "Archivo"`;
-    lines = wrap(ctx, text, maxW);
+    ctx.font = `900 ${size}px "Big Shoulders Display"`;
+    lines = wrap(ctx, text.toUpperCase(), maxW);
     const widest = Math.max(...lines.map((l) => ctx.measureText(l).width));
-    if (lines.length * size * 1.02 <= maxH && widest <= maxW) break;
+    if (lines.length * size * 0.92 <= maxH && widest <= maxW) break;
     size -= 4;
-  } while (size > 20);
+  } while (size > 24);
   return { size, lines };
 }
 
-// Draw a photo full-bleed into a box (cover crop)
-function drawPhoto(ctx, img, x, y, w, h, focusY = 0.5) {
-  if (!img) return;
-  const r = Math.max(w / img.width, h / img.height);
-  const iw = img.width * r, ih = img.height * r;
-  ctx.save();
-  ctx.beginPath();
-  ctx.rect(x, y, w, h);
-  ctx.clip();
-  ctx.drawImage(img, x + (w - iw) / 2, y + (h - ih) * focusY, iw, ih);
-  ctx.restore();
-}
-
-// One shared ad layout, like a real billboard: the visual fills the top (or the
-// left on wide boards), then a sentence-case headline, a short line under it,
-// and the project name small at the bottom.
+// One shared ad layout: picture on top (or left), headline, a footer strip
 async function makeAdTexture(ad, aspect) {
   const H = 1024, W = Math.round(H * aspect);
   const c = document.createElement("canvas");
   c.width = W; c.height = H;
   const ctx = c.getContext("2d");
-  const pad = Math.round(Math.min(W, H) * 0.07);
-  ctx.textBaseline = "top";
+  const pad = Math.round(Math.min(W, H) * 0.06);
 
   if (ad.kind === "name") {
     ctx.fillStyle = "#0b3ea8";
     ctx.fillRect(0, 0, W, H);
     ctx.fillStyle = "#ffffff";
-    const head = fitHeadline(ctx, "Brendan Nussenblatt", W - pad * 2, H * 0.62, 300);
-    head.lines.forEach((l, i) => ctx.fillText(l, pad, pad + i * head.size * 1.0));
-    ctx.font = `500 ${Math.round(H * 0.075)}px "Archivo"`;
-    ctx.globalAlpha = 0.85;
-    ctx.fillText("Designer, New York", pad, H - pad - H * 0.08);
-    ctx.globalAlpha = 1;
+    const { size, lines } = fitHeadline(ctx, "Brendan Nussenblatt", W - pad * 2, H * 0.6, 260);
+    ctx.textBaseline = "top";
+    lines.forEach((l, i) => ctx.fillText(l, pad, pad * 1.4 + i * size * 0.92));
+    ctx.font = `900 ${Math.round(H * 0.07)}px "Doto", monospace`;
+    ctx.fillStyle = "#ffcf5a";
+    ctx.fillText("DESIGNER, NEW YORK", pad, H - pad - H * 0.08);
     return new THREE.CanvasTexture(c);
   }
 
-  if (ad.kind === "text") {
-    ctx.fillStyle = ad.bg;
+  if (ad.kind === "led") {
+    ctx.fillStyle = "#050505";
     ctx.fillRect(0, 0, W, H);
-    ctx.fillStyle = ad.ink;
-    const head = fitHeadline(ctx, ad.headline, W - pad * 2, H * 0.5, 420);
-    head.lines.forEach((l, i) => ctx.fillText(l, pad, pad + i * head.size));
-    let subSize = Math.round(H * 0.075);
-    do {
-      ctx.font = `500 ${subSize}px "Archivo"`;
-      if (ctx.measureText(ad.sub).width <= W - pad * 2) break;
-      subSize -= 2;
-    } while (subSize > 14);
-    ctx.fillText(ad.sub, pad, H - pad - subSize * 1.2);
+    ctx.fillStyle = "rgba(255,176,32,0.10)";
+    for (let y = 6; y < H; y += 14) for (let x = 6; x < W; x += 14) ctx.fillRect(x, y, 4, 4);
+    ctx.fillStyle = "#ffb020";
+    ctx.shadowColor = "rgba(255,176,32,0.8)";
+    ctx.shadowBlur = 24;
+    ctx.textBaseline = "top";
+    ctx.font = `900 ${Math.round(H * 0.11)}px "Doto", monospace`;
+    ctx.fillText(ad.headline.toUpperCase(), pad, H * 0.28);
+    const big = fitHeadline(ctx, ad.sub, W - pad * 2, H * 0.4, 220);
+    ctx.font = `900 ${big.size}px "Doto", monospace`;
+    big.lines.forEach((l, i) => ctx.fillText(l, pad, H * 0.45 + i * big.size));
     return new THREE.CanvasTexture(c);
   }
 
@@ -571,39 +553,48 @@ async function makeAdTexture(ad, aspect) {
   ctx.fillStyle = ad.bg;
   ctx.fillRect(0, 0, W, H);
 
-  const landscape = aspect > 1.2;
-  let tx, ty, tw, th;
+  const landscape = aspect > 1.15;
+  const footerH = Math.round(H * 0.085);
+  let textX, textY, textW, textH;
+
   if (landscape) {
-    const vw = Math.round(W * 0.5);
-    if (ART[ad.art]) ART[ad.art](ctx, 0, 0, vw, H, ad);
-    else drawPhoto(ctx, img, 0, 0, vw, H, ad.focusY);
-    tx = vw + pad; ty = pad; tw = W - vw - pad * 2; th = H - pad * 2;
+    const imgW = Math.round(W * 0.5);
+    if (ART[ad.art]) ART[ad.art](ctx, 0, 0, imgW, H - footerH, ad);
+    else drawDuotone(ctx, img, 0, 0, imgW, H - footerH, ad.dark, ad.light, ad.fit, ad.focusY);
+    textX = imgW + pad; textY = pad; textW = W - imgW - pad * 2; textH = H - footerH - pad * 2;
   } else {
-    const vh = Math.round(H * 0.56);
-    if (ART[ad.art]) ART[ad.art](ctx, 0, 0, W, vh, ad);
-    else drawPhoto(ctx, img, 0, 0, W, vh, ad.focusY);
-    tx = pad; ty = vh + pad * 0.8; tw = W - pad * 2; th = H - vh - pad * 1.8;
+    const imgH = Math.round(H * 0.5);
+    if (ART[ad.art]) ART[ad.art](ctx, 0, 0, W, imgH, ad);
+    else drawDuotone(ctx, img, 0, 0, W, imgH, ad.dark, ad.light, ad.fit, ad.focusY);
+    textX = pad; textY = imgH + pad * 0.8; textW = W - pad * 2; textH = H - imgH - footerH - pad * 1.6;
   }
 
-  // Headline and one supporting line
-  const titleSize = Math.round(Math.min(W, H) * 0.042);
-  const subSize = Math.round(Math.min(W, H) * 0.048);
+  // Headline, then a one-line subhead under it
   ctx.fillStyle = ad.ink;
-  const head = fitHeadline(ctx, ad.headline, tw, th - subSize * 2.6 - titleSize * 2, landscape ? 190 : 150);
-  head.lines.forEach((l, i) => ctx.fillText(l, tx, ty + i * head.size * 1.02));
-  const afterHead = ty + head.lines.length * head.size * 1.02 + subSize * 0.6;
-  ctx.font = `500 ${subSize}px "Archivo"`;
-  ctx.globalAlpha = 0.86;
-  wrap(ctx, ad.sub, tw).slice(0, 2).forEach((l, i) => ctx.fillText(l, tx, afterHead + i * subSize * 1.3));
-
-  // Project name, small, at the bottom
-  ctx.globalAlpha = 0.6;
-  ctx.font = `700 ${titleSize}px "Archivo"`;
-  ctx.fillText(ad.title, tx, (landscape ? H : H) - pad - titleSize);
+  ctx.textBaseline = "top";
+  const subSize = Math.round(Math.min(W, H) * 0.045);
+  const head = fitHeadline(ctx, ad.headline, textW, textH - subSize * 3.2, landscape ? 200 : 170);
+  head.lines.forEach((l, i) => ctx.fillText(l, textX, textY + i * head.size * 0.92));
+  ctx.font = `600 ${subSize}px "Archivo", sans-serif`;
+  ctx.globalAlpha = 0.9;
+  const subLines = wrap(ctx, ad.sub, textW);
+  const subY = textY + head.lines.length * head.size * 0.92 + subSize * 0.8;
+  subLines.slice(0, 2).forEach((l, i) => ctx.fillText(l, textX, subY + i * subSize * 1.25));
   ctx.globalAlpha = 1;
 
+  // Footer strip: project name on the left, "BN" mark on the right
+  ctx.fillStyle = ad.dark;
+  ctx.fillRect(0, H - footerH, W, footerH);
+  ctx.fillStyle = ad.light;
+  ctx.font = `800 ${Math.round(footerH * 0.5)}px "Big Shoulders Display"`;
+  ctx.textBaseline = "middle";
+  ctx.fillText(ad.title.toUpperCase(), pad, H - footerH / 2);
+  ctx.textAlign = "right";
+  ctx.fillText("BN", W - pad, H - footerH / 2);
+  ctx.textAlign = "left";
+
   const tex = new THREE.CanvasTexture(c);
-  tex.anisotropy = 8;
+  tex.anisotropy = 4;
   return tex;
 }
 
@@ -611,44 +602,34 @@ async function makeAdTexture(ad, aspect) {
 const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
 mount.prepend(renderer.domElement);
 renderer.domElement.setAttribute("aria-hidden", "true");
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color("#121331");
-scene.fog = new THREE.Fog("#121331", 140, 320);
+scene.background = new THREE.Color("#0c0a22");
+scene.fog = new THREE.Fog("#0c0a22", 80, 210);
 
-const camera = new THREE.PerspectiveCamera(50, 1, 0.5, 600);
-const HOME = { pos: new THREE.Vector3(0, 24, 100), target: new THREE.Vector3(0, 38, 0) };
+const camera = new THREE.PerspectiveCamera(50, 1, 0.5, 400);
+const HOME = { pos: new THREE.Vector3(0, 7, 36), target: new THREE.Vector3(0, 34, -40) };
 camera.position.copy(HOME.pos);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.copy(HOME.target);
 controls.enableDamping = true;
-controls.enableRotate = false;
+controls.enablePan = false;
 controls.enableZoom = false;
-controls.enablePan = true;
-controls.screenSpacePanning = true;
-controls.panSpeed = 0.9;
-controls.mouseButtons = { LEFT: THREE.MOUSE.PAN, MIDDLE: THREE.MOUSE.PAN, RIGHT: THREE.MOUSE.PAN };
-controls.touches = { ONE: THREE.TOUCH.PAN, TWO: THREE.TOUCH.PAN };
+controls.rotateSpeed = 0.45;
+controls.minAzimuthAngle = -0.16;
+controls.maxAzimuthAngle = 0.16;
+controls.minPolarAngle = 1.38;
+controls.maxPolarAngle = 1.62;
 
-// Dragging slides the view along the street, always facing the billboards.
-// panLimitX stops it at the outer buildings; set in fitHome().
-let panLimitX = 0;
-const offset = new THREE.Vector3();
-function clampPan() {
-  offset.copy(camera.position).sub(controls.target);
-  const x = THREE.MathUtils.clamp(controls.target.x, -panLimitX, panLimitX);
-  const y = THREE.MathUtils.clamp(controls.target.y, HOME.target.y - 5, HOME.target.y + 5);
-  controls.target.set(x, y, HOME.target.z);
-  camera.position.copy(controls.target).add(offset);
-}
-
-scene.add(new THREE.HemisphereLight("#8f97d8", "#20182e", 0.9));
-const keyLight = new THREE.DirectionalLight("#ffd6b0", 0.55);
-keyLight.position.set(30, 60, 80);
-scene.add(keyLight);
+scene.add(new THREE.HemisphereLight("#6f7bff", "#1a0f2e", 0.55));
+const warm = new THREE.DirectionalLight("#ffb27a", 0.6);
+warm.position.set(20, 40, 30);
+scene.add(warm);
 
 // Seeded random numbers, so the city is laid out the same on every visit
 let seed = 24;
@@ -658,23 +639,19 @@ function random() {
   t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
   return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
 }
-const rng = (a, b) => a + random() * (b - a);
 
-// Facades: floors of mostly dark windows, with a few warm lit ones grouped
-// together the way offices actually look at night.
+// Lit windows texture shared by every building
 function windowsTexture() {
   const c = document.createElement("canvas");
-  c.width = 256; c.height = 512;
+  c.width = 128; c.height = 256;
   const g = c.getContext("2d");
   g.fillStyle = "#000";
-  g.fillRect(0, 0, c.width, c.height);
-  for (let y = 10; y < c.height; y += 20) {
-    const floorLit = random() < 0.35 ? rng(0.25, 0.7) : rng(0, 0.08);
-    for (let x = 8; x < c.width; x += 14) {
-      if (random() < floorLit) {
-        g.fillStyle = random() < 0.8 ? "rgba(255, 214, 160, 0.9)" : "rgba(170, 186, 255, 0.7)";
-        g.fillRect(x, y, 8, 11);
-      }
+  g.fillRect(0, 0, 128, 256);
+  for (let y = 4; y < 256; y += 10) {
+    for (let x = 4; x < 128; x += 8) {
+      const r = random();
+      g.fillStyle = r > 0.86 ? "#ffd59a" : r > 0.8 ? "#8ea4ff" : "#05040c";
+      g.fillRect(x, y, 4, 5);
     }
   }
   const t = new THREE.CanvasTexture(c);
@@ -684,152 +661,166 @@ function windowsTexture() {
 }
 const winTex = windowsTexture();
 
-const facadeColors = ["#2a2c4f", "#25274a", "#30304f", "#2b2846", "#232643"];
-function building(x, zFront, w, d, h, color, lit = 0.15) {
+const buildingColors = ["#1c1a3f", "#221f4a", "#191734", "#272350", "#1e2446"];
+function building(x, z, w, d, h, color) {
   const mat = new THREE.MeshLambertMaterial({
-    color: color || facadeColors[Math.floor(random() * facadeColors.length)],
+    color: color || buildingColors[Math.floor(random() * buildingColors.length)],
     emissive: "#ffffff",
     emissiveMap: winTex.clone(),
-    emissiveIntensity: lit,
+    emissiveIntensity: 0.32,
+    flatShading: true,
   });
-  mat.emissiveMap.repeat.set(Math.max(1, w / 18), Math.max(1, h / 36));
-  mat.emissiveMap.offset.set(random(), random());
+  mat.emissiveMap.repeat.set(Math.max(1, w / 4), Math.max(1, h / 6));
   mat.emissiveMap.needsUpdate = true;
   const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
-  m.position.set(x, h / 2, zFront - d / 2);
+  m.position.set(x, h / 2, z);
   scene.add(m);
   return m;
 }
 
-// Ground, the avenue, sidewalks, a crosswalk
-const ground = new THREE.Mesh(new THREE.PlaneGeometry(800, 800), new THREE.MeshLambertMaterial({ color: "#1b1a33" }));
+// Street, sidewalks, crosswalks
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), new THREE.MeshLambertMaterial({ color: "#14122a" }));
 ground.rotation.x = -Math.PI / 2;
 scene.add(ground);
-const road = new THREE.Mesh(new THREE.PlaneGeometry(22, 140), new THREE.MeshLambertMaterial({ color: "#111022" }));
+const road = new THREE.Mesh(new THREE.PlaneGeometry(16, 220), new THREE.MeshLambertMaterial({ color: "#0d0c1c" }));
 road.rotation.x = -Math.PI / 2;
-road.position.set(0, 0.03, 60);
+road.position.set(0, 0.02, -40);
 scene.add(road);
-const stripeMat = new THREE.MeshBasicMaterial({ color: "#c9cbe6" });
-for (let i = -9; i <= 9; i += 2) {
-  const s = new THREE.Mesh(new THREE.PlaneGeometry(1, 5), stripeMat);
-  s.rotation.x = -Math.PI / 2;
-  s.position.set(i, 0.05, 30);
-  scene.add(s);
+const stripeMat = new THREE.MeshBasicMaterial({ color: "#cfd3ff" });
+for (const zc of [18, -20]) {
+  for (let i = -7; i <= 7; i += 1.6) {
+    const s = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 4), stripeMat);
+    s.rotation.x = -Math.PI / 2;
+    s.position.set(i, 0.04, zc);
+    scene.add(s);
+  }
 }
 
-// One Times Square: the biggest thing on the page
+// The red TKTS steps, in the foreground
+const steps = new THREE.Group();
+const stepMat = new THREE.MeshStandardMaterial({ color: "#d0102a", emissive: "#ff1a3a", emissiveIntensity: 0.85, roughness: 0.6 });
+for (let i = 0; i < 6; i++) {
+  const s = new THREE.Mesh(new THREE.BoxGeometry(12, 0.7, 2.2), stepMat);
+  s.position.set(0, 0.35 + i * 0.7, 30 + i * 2.2);
+  steps.add(s);
+}
+scene.add(steps);
+
+// Side buildings, both sides of the square
+const rng = (a, b) => a + random() * (b - a);
+for (const side of [-1, 1]) {
+  let z = 34;
+  while (z > -120) {
+    const d = rng(10, 16);
+    // Inner faces stay at least 18 units from the street so billboards sit in front
+    building(side * rng(25, 28), z - d / 2, rng(10, 14), d, rng(28, 70));
+    z -= d + 0.5;
+  }
+  // a second, taller row behind
+  for (let z2 = 20; z2 > -140; z2 -= 18) building(side * rng(40, 48), z2, 14, 14, rng(50, 100));
+}
+
+// One Times Square: the tower at the end of the square
 const tower = new THREE.Group();
-const towerMat = new THREE.MeshLambertMaterial({ color: "#1b1c3a" });
-const shaft = new THREE.Mesh(new THREE.BoxGeometry(19, 70, 14), towerMat);
-shaft.position.set(0, 35, -7);
+const towerMat = new THREE.MeshLambertMaterial({ color: "#16142e", flatShading: true });
+const shaft = new THREE.Mesh(new THREE.BoxGeometry(10, 64, 9), towerMat);
+shaft.position.y = 32;
 tower.add(shaft);
-const crown = new THREE.Mesh(new THREE.BoxGeometry(13, 5, 10), towerMat);
-crown.position.set(0, 72.5, -7);
+const crown = new THREE.Mesh(new THREE.BoxGeometry(7, 6, 6), towerMat);
+crown.position.y = 67;
 tower.add(crown);
-const mast = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 7, 8), towerMat);
-mast.position.set(0, 78.5, -7);
+const mast = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.25, 8, 6), towerMat);
+mast.position.y = 74;
 tower.add(mast);
+
+// The ball, low-poly and glowing
 const ball = new THREE.Mesh(
-  new THREE.IcosahedronGeometry(3, 1),
-  new THREE.MeshStandardMaterial({ color: "#ffffff", emissive: "#bfe6ff", emissiveIntensity: 0.9, flatShading: true, roughness: 0.35 })
+  new THREE.IcosahedronGeometry(2.6, 1),
+  new THREE.MeshStandardMaterial({ color: "#ffffff", emissive: "#9fd8ff", emissiveIntensity: 1.1, flatShading: true, metalness: 0.2, roughness: 0.3 })
 );
-ball.position.set(0, 84, -7);
+ball.position.y = 79;
 tower.add(ball);
+tower.position.set(0, 0, -45);
 scene.add(tower);
 
-// The zipper: the news ticker that wraps the tower, under the screens
-const zipCanvas = document.createElement("canvas");
-function drawZipper() {
-  const c = zipCanvas;
+// The zipper: an LED ticker band around the tower
+function zipperTexture() {
+  const c = document.createElement("canvas");
   c.width = 2048; c.height = 96;
   const g = c.getContext("2d");
-  g.fillStyle = "#08070f";
+  g.fillStyle = "#050505";
   g.fillRect(0, 0, c.width, c.height);
-  g.font = '700 54px "Archivo"';
-  g.fillStyle = "#ffb347";
+  g.font = '900 60px "Doto", monospace';
+  g.fillStyle = "#ffb020";
   g.textBaseline = "middle";
-  g.fillText("BRENDAN NUSSENBLATT      DESIGNER      NEW YORK      PORTFOLIO      ", 30, 50);
+  g.fillText("BRENDAN NUSSENBLATT ◆ DESIGNER ◆ NEW YORK ◆ NOW SHOWING ◆ ", 20, 50);
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = THREE.RepeatWrapping;
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
 }
-drawZipper();
-const zipTex = new THREE.CanvasTexture(zipCanvas);
-zipTex.wrapS = THREE.RepeatWrapping;
-zipTex.colorSpace = THREE.SRGBColorSpace;
-const zipper = new THREE.Mesh(new THREE.BoxGeometry(19.6, 2.4, 14.6), new THREE.MeshBasicMaterial({ map: zipTex }));
-zipper.position.set(0, 8.5, -7);
+const zipTex = zipperTexture();
+const zipper = new THREE.Mesh(new THREE.BoxGeometry(10.6, 1.6, 9.6), new THREE.MeshBasicMaterial({ map: zipTex }));
+zipper.position.set(0, 14, -45);
 scene.add(zipper);
 
-// Flanking buildings that carry the side billboards, nearly face-on
-building(-25, 4, 24, 22, 66, "#2a2c4f");
-building(25, 4, 24, 22, 66, "#2a2c4f");
-building(-51, 10, 26, 24, 74, "#25274a");
-building(51, 10, 26, 24, 74, "#25274a");
-// Corners and the skyline behind
-for (const side of [-1, 1]) {
-  building(side * 76, 16, 24, 24, rng(55, 80));
-  building(side * 98, 20, 22, 24, rng(60, 90));
-  for (let x = 12; x < 130; x += rng(14, 20)) building(side * x, -36, rng(12, 18), 16, rng(70, 130), null, 0.14);
-}
-for (let x = -120; x < 120; x += rng(16, 24)) building(x, -70, rng(14, 22), 18, rng(90, 160), "#1d1f3b", 0.1);
-
-// Taxis on the avenue
+// Taxis
 const taxis = [];
-const taxiMat = new THREE.MeshLambertMaterial({ color: "#f4bf1a" });
-const lampMat = new THREE.MeshBasicMaterial({ color: "#fff3cf" });
-for (let i = 0; i < 6; i++) {
+const taxiMat = new THREE.MeshLambertMaterial({ color: "#ffc61a", emissive: "#5a3d00", flatShading: true });
+const lightMat = new THREE.MeshBasicMaterial({ color: "#fff6d8" });
+for (let i = 0; i < 8; i++) {
   const t = new THREE.Group();
-  const body = new THREE.Mesh(new THREE.BoxGeometry(2.4, 1.1, 5), taxiMat);
-  body.position.y = 0.9;
-  const cab = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.9, 2.6), taxiMat);
-  cab.position.y = 1.85;
-  const lamp = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.3, 0.1), lampMat);
-  lamp.position.set(0, 1, 2.52);
+  const body = new THREE.Mesh(new THREE.BoxGeometry(2, 1, 4.2), taxiMat);
+  body.position.y = 0.8;
+  const cab = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.8, 2.2), taxiMat);
+  cab.position.y = 1.6;
+  const lamp = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.25, 0.1), lightMat);
+  lamp.position.set(0, 0.9, 2.12);
   t.add(body, cab, lamp);
-  const lane = i % 2 === 0 ? -4.5 : 4.5;
-  t.position.set(lane, 0, 10 + i * 16);
-  t.userData.speed = (lane < 0 ? 1 : -1) * rng(8, 12);
+  const lane = i % 2 === 0 ? -3.5 : 3.5;
+  t.position.set(lane, 0, -120 + i * 22);
+  t.userData.speed = (lane < 0 ? 1 : -1) * rng(9, 14);
   if (lane > 0) t.rotation.y = Math.PI;
   scene.add(t);
   taxis.push(t);
 }
 
 // ---------- Billboards ----------
-// Tower screens run top to bottom; side billboards sit on the building fronts.
+// Each one: which ad, where, which way it faces, and its size in world units.
 const BOARDS = [
-  { ad: "name",      pos: [0, 61, 0.3],     rotY: 0, w: 16, h: 8.5 },
-  { ad: "journey",   pos: [0, 48, 0.3],     rotY: 0, w: 16, h: 14 },
-  { ad: "spider",    pos: [0, 33, 0.3],     rotY: 0, w: 16, h: 14 },
-  { ad: "ots",       pos: [0, 18, 0.3],     rotY: 0, w: 16, h: 14 },
-  { ad: "about",     pos: [-25, 45, 4.3],   rotY: 0, w: 17, h: 21 },
-  { ad: "draft",     pos: [-25, 21, 4.3],   rotY: 0, w: 19, h: 12 },
-  { ad: "brandinos", pos: [-51, 52, 10.3],  rotY: 0, w: 20, h: 12.5 },
-  { ad: "robot",     pos: [-51, 29, 10.3],  rotY: 0, w: 14, h: 17 },
-  { ad: "lego",      pos: [25, 45, 4.3],    rotY: 0, w: 17, h: 21 },
-  { ad: "vr",        pos: [25, 21, 4.3],    rotY: 0, w: 19, h: 12 },
-  { ad: "resume",    pos: [51, 52, 10.3],   rotY: 0, w: 20, h: 12.5 },
-  { ad: "contact",   pos: [51, 29, 10.3],   rotY: 0, w: 14, h: 17 },
+  { ad: "name",      pos: [0, 58, -40.3],   rotY: 0, w: 8.6, h: 7.2 },
+  { ad: "journey",   pos: [0, 48, -40.3],   rotY: 0, w: 8.6, h: 10.4 },
+  { ad: "spider",    pos: [0, 36.5, -40.3], rotY: 0, w: 8.6, h: 10.4 },
+  { ad: "ots",       pos: [0, 25, -40.3],   rotY: 0, w: 8.6, h: 10.4 },
+  { ad: "about",     pos: [-13.6, 27, 0],   rotY: 0.72, w: 11, h: 14.5 },
+  { ad: "brandinos", pos: [-9.9, 22, -30], rotY: 0.72, w: 13, h: 8.6 },
+  { ad: "draft",     pos: [-13.6, 41, -26], rotY: 0.7, w: 13, h: 8.8 },
+  { ad: "lego",      pos: [13.6, 27, 0],    rotY: -0.72, w: 11, h: 14.5 },
+  { ad: "vr",        pos: [10.6, 23, -30], rotY: -0.72, w: 8.5, h: 11 },
+  { ad: "robot",     pos: [13.6, 41.5, -24],  rotY: -0.7, w: 8.5, h: 10.5 },
+  { ad: "resume",    pos: [10.6, 10.5, -34], rotY: -0.7, w: 11, h: 5.5 },
 ];
 
 const boardMeshes = [];
-const frameMat = new THREE.MeshLambertMaterial({ color: "#0e0d1d" });
+const frameMat = new THREE.MeshLambertMaterial({ color: "#0a0918", flatShading: true });
 
 async function buildBoards() {
   await Promise.all([
-    document.fonts.load('800 100px "Archivo"'),
-    document.fonts.load('700 100px "Archivo"'),
-    document.fonts.load('500 40px "Archivo"'),
+    document.fonts.load('900 100px "Big Shoulders Display"'),
+    document.fonts.load('800 100px "Big Shoulders Display"'),
+    document.fonts.load('900 60px "Doto"'),
+    document.fonts.load('600 40px "Archivo"'),
   ]).catch(() => {});
-  drawZipper();
-  zipTex.needsUpdate = true;
 
   for (const b of BOARDS) {
     const ad = AD[b.ad];
     const tex = await makeAdTexture(ad, b.w / b.h);
     tex.colorSpace = THREE.SRGBColorSpace;
     const mat = new THREE.MeshBasicMaterial({ map: tex, toneMapped: false });
-    mat.color.setScalar(0.94);
+    mat.color.setScalar(0.92);
     const screen = new THREE.Mesh(new THREE.PlaneGeometry(b.w, b.h), mat);
-    const frame = new THREE.Mesh(new THREE.BoxGeometry(b.w + 0.8, b.h + 0.8, 0.6), frameMat);
-    frame.position.z = -0.35;
+    const frame = new THREE.Mesh(new THREE.BoxGeometry(b.w + 0.6, b.h + 0.6, 0.5), frameMat);
+    frame.position.z = -0.3;
     const g = new THREE.Group();
     g.add(frame, screen);
     g.position.set(...b.pos);
@@ -862,17 +853,17 @@ function pick() {
 }
 
 function setHover(mesh, e) {
-  if (hovered && hovered !== mesh) hovered.material.color.setScalar(0.94);
+  if (hovered && hovered !== mesh) hovered.material.color.setScalar(0.92);
   hovered = mesh;
   if (mesh) {
-    mesh.material.color.setScalar(1.12);
+    mesh.material.color.setScalar(1.25);
     renderer.domElement.style.cursor = "pointer";
     tip.textContent = mesh.userData.ad.title;
     tip.style.left = e.clientX - mount.getBoundingClientRect().left + "px";
     tip.style.top = e.clientY - mount.getBoundingClientRect().top + "px";
     tip.classList.add("is-visible");
   } else {
-    renderer.domElement.style.cursor = "ew-resize";
+    renderer.domElement.style.cursor = "grab";
     tip.classList.remove("is-visible");
   }
 }
@@ -924,7 +915,7 @@ function focusBoard(mesh) {
   panel.querySelector("p").textContent = ad.blurb;
   const link = panel.querySelector(".open");
   link.href = ad.href;
-  link.textContent = ad.id === "resume" ? "Open the resume" : ad.id === "about" ? "Read about me" : ad.id === "contact" ? "Send an email" : "Open the project";
+  link.textContent = ad.id === "resume" ? "Open the resume" : ad.id === "about" ? "Read about me" : "Open the project";
   if (ad.external) { link.target = "_blank"; link.rel = "noopener"; } else { link.removeAttribute("target"); link.removeAttribute("rel"); }
   panel.hidden = false;
   requestAnimationFrame(() => panel.classList.add("is-open"));
@@ -944,35 +935,20 @@ panel.querySelector(".back").addEventListener("click", backToSquare);
 window.addEventListener("keydown", (e) => { if (e.key === "Escape") backToSquare(); });
 
 // ---------- Rendering ----------
-// Fit the whole composition: the full tower vertically, and both outer
-// buildings horizontally on wide screens (on narrow ones, the tower and the
-// two inner buildings, and you drag to see the rest).
-function fitHome() {
-  const aspect = camera.aspect;
-  const halfFov = THREE.MathUtils.degToRad(camera.fov / 2);
-  const halfW = aspect < 1 ? 36 : 72;
-  const distW = halfW / (Math.tan(halfFov) * aspect);
-  const distH = 46 / Math.tan(halfFov);
-  const dist = Math.max(distW, distH) + 6;
-  HOME.pos.set(0, 24, dist);
-  // How far you can slide: until the outer buildings' far edges (x = ±64)
-  // reach the edge of the screen, plus a small nudge on wide screens.
-  const visibleHalfW = Math.tan(halfFov) * aspect * (dist - 10);
-  panLimitX = Math.max(5, 64 - visibleHalfW);
-}
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.42, 0.5, 0.86);
+composer.addPass(bloom);
+composer.addPass(new OutputPass());
 
 function resize() {
   const w = mount.clientWidth, h = mount.clientHeight;
   renderer.setSize(w, h, false);
+  composer.setSize(w, h);
   camera.aspect = w / h;
-  camera.fov = w / h < 0.9 ? 58 : 46;
+  // Narrow screens: step back so the tower and both sides still fit
+  camera.fov = w / h < 0.9 ? 68 : 50;
   camera.updateProjectionMatrix();
-  fitHome();
-  if (!focused && !tween) {
-    camera.position.copy(HOME.pos);
-    controls.target.copy(HOME.target);
-    controls.update();
-  }
 }
 new ResizeObserver(resize).observe(mount);
 resize();
@@ -998,19 +974,18 @@ function frame() {
     }
   } else if (controls.enabled) {
     controls.update();
-    clampPan();
   }
 
   if (!reduceMotion) {
-    ball.rotation.y += dt * 0.2;
-    zipTex.offset.x += dt * 0.05;
+    ball.rotation.y += dt * 0.25;
+    zipTex.offset.x += dt * 0.06;
     for (const t of taxis) {
       t.position.z += t.userData.speed * dt;
-      if (t.position.z > 120) t.position.z = 6;
-      if (t.position.z < 6) t.position.z = 120;
+      if (t.position.z > 40) t.position.z = -140;
+      if (t.position.z < -140) t.position.z = 40;
     }
   }
-  renderer.render(scene, camera);
+  composer.render();
 }
 
 buildBoards().then(() => {
