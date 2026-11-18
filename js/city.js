@@ -612,7 +612,7 @@ scene.background = new THREE.Color("#0c0a22");
 scene.fog = new THREE.Fog("#0c0a22", 80, 210);
 
 const camera = new THREE.PerspectiveCamera(50, 1, 0.5, 400);
-const HOME = { pos: new THREE.Vector3(0, 7, 36), target: new THREE.Vector3(0, 34, -40) };
+const HOME = { pos: new THREE.Vector3(0, 7, 36), target: new THREE.Vector3(0, 37, -40) };
 camera.position.copy(HOME.pos);
 
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -640,42 +640,173 @@ function random() {
   return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
 }
 
-// Lit windows texture shared by every building
-function windowsTexture() {
-  const c = document.createElement("canvas");
-  c.width = 128; c.height = 256;
-  const g = c.getContext("2d");
-  g.fillStyle = "#000";
-  g.fillRect(0, 0, 128, 256);
-  for (let y = 4; y < 256; y += 10) {
-    for (let x = 4; x < 128; x += 8) {
-      const r = random();
-      g.fillStyle = r > 0.86 ? "#ffd59a" : r > 0.8 ? "#8ea4ff" : "#05040c";
-      g.fillRect(x, y, 4, 5);
+const rng = (a, b) => a + random() * (b - a);
+
+// ---------- Buildings ----------
+// A few facade "materials", each drawn once on a canvas: a base color map with
+// floor lines, columns, and window frames, plus an emissive map of lit windows.
+// Lit offices cluster on some floors and leave others dark, like a real city.
+const FACADES = [
+  { kind: "masonry", wall: "#4a3a33", frame: "#2c221e", glass: "#141019", winW: 0.5, warm: 0.9 },
+  { kind: "limestone", wall: "#5b5248", frame: "#363029", glass: "#15131b", winW: 0.45, warm: 0.92 },
+  { kind: "glass", wall: "#1d2c4a", frame: "#33456a", glass: "#22375e", winW: 0.86, warm: 0.6 },
+  { kind: "darkglass", wall: "#151827", frame: "#2a3046", glass: "#1a1f33", winW: 0.88, warm: 0.5 },
+  { kind: "office", wall: "#2f3242", frame: "#1d1f2b", glass: "#171a28", winW: 0.66, warm: 0.75 },
+];
+
+function facadeTextures(f) {
+  const W = 512, H = 1024, cols = 16, floors = 32;
+  const cw = W / cols, fh = H / floors;
+  const base = document.createElement("canvas");
+  base.width = W; base.height = H;
+  const b = base.getContext("2d");
+  const glow = document.createElement("canvas");
+  glow.width = W; glow.height = H;
+  const e = glow.getContext("2d");
+  b.fillStyle = f.wall;
+  b.fillRect(0, 0, W, H);
+  e.fillStyle = f.wall;
+  e.fillRect(0, 0, W, H);
+  e.fillStyle = "rgba(0, 0, 0, 0.72)";
+  e.fillRect(0, 0, W, H);
+
+  for (let fl = 0; fl < floors; fl++) {
+    const y = fl * fh;
+    // Floor slab line
+    b.fillStyle = f.frame;
+    b.fillRect(0, y, W, fh * (f.kind.includes("glass") ? 0.08 : 0.16));
+    e.fillStyle = "rgba(0, 0, 0, 0.5)";
+    e.fillRect(0, y, W, fh * (f.kind.includes("glass") ? 0.08 : 0.16));
+    // How lit this floor is: most floors are dark, some are busy
+    const busy = random() < 0.22 ? rng(0.35, 0.75) : rng(0, 0.06);
+    let run = 0;
+    for (let c = 0; c < cols; c++) {
+      const ww = cw * f.winW, wh = fh * (f.kind.includes("glass") ? 0.82 : 0.6);
+      const x = c * cw + (cw - ww) / 2, wy = y + fh * (f.kind.includes("glass") ? 0.12 : 0.26);
+      b.fillStyle = f.glass;
+      b.fillRect(x, wy, ww, wh);
+      // Lit windows come in runs (one office = several windows)
+      if (run > 0 || random() < busy) {
+        if (run === 0) run = Math.floor(rng(1, 4));
+        run--;
+        const warm = random() < f.warm;
+        e.fillStyle = warm ? `rgba(255, ${Math.round(rng(190, 215))}, ${Math.round(rng(135, 165))}, ${rng(0.55, 0.9).toFixed(2)})` : `rgba(175, 195, 255, ${rng(0.45, 0.75).toFixed(2)})`;
+        e.fillRect(x, wy, ww, wh);
+      }
+    }
+    // Masonry gets vertical piers between windows
+    if (!f.kind.includes("glass")) {
+      b.fillStyle = f.frame;
+      for (let c = 0; c <= cols; c += 2) { b.fillRect(c * cw - 2, y, 4, fh); e.fillStyle = "rgba(0,0,0,0.5)"; e.fillRect(c * cw - 2, y, 4, fh); b.fillStyle = f.frame; }
+    } else {
+      b.fillStyle = f.frame;
+      for (let c = 0; c <= cols; c++) b.fillRect(c * cw - 1, y, 2, fh);
     }
   }
-  const t = new THREE.CanvasTexture(c);
-  t.wrapS = t.wrapT = THREE.RepeatWrapping;
-  t.colorSpace = THREE.SRGBColorSpace;
-  return t;
+  const map = new THREE.CanvasTexture(base);
+  const emissiveMap = new THREE.CanvasTexture(glow);
+  for (const t of [map, emissiveMap]) {
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    t.colorSpace = THREE.SRGBColorSpace;
+    t.anisotropy = 4;
+  }
+  return { map, emissiveMap };
 }
-const winTex = windowsTexture();
+// Two lighting variations per material, so neighbors don't match
+const FACADE_TEX = FACADES.map((f) => [facadeTextures(f), facadeTextures(f)]);
 
-const buildingColors = ["#1c1a3f", "#221f4a", "#191734", "#272350", "#1e2446"];
-function building(x, z, w, d, h, color) {
-  const mat = new THREE.MeshLambertMaterial({
-    color: color || buildingColors[Math.floor(random() * buildingColors.length)],
-    emissive: "#ffffff",
-    emissiveMap: winTex.clone(),
-    emissiveIntensity: 0.32,
-    flatShading: true,
-  });
-  mat.emissiveMap.repeat.set(Math.max(1, w / 4), Math.max(1, h / 6));
-  mat.emissiveMap.needsUpdate = true;
-  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
-  m.position.set(x, h / 2, z);
+const roofMat = new THREE.MeshLambertMaterial({ color: "#1a1824" });
+const corniceMat = new THREE.MeshLambertMaterial({ color: "#2b2530" });
+const tankMat = new THREE.MeshLambertMaterial({ color: "#5a4334" });
+const shopColors = ["#ff4d6d", "#ffd23f", "#4fd1ff", "#ffffff", "#ff8a3d", "#7cff8a"];
+
+function blockMesh(x, y0, z, w, d, h, fi) {
+  const f = FACADES[fi];
+  const tex = FACADE_TEX[fi][Math.floor(random() * 2)];
+  // One floor is about 3.6 units tall; one column about 2.2 units wide
+  const map = tex.map.clone(), emissiveMap = tex.emissiveMap.clone();
+  const rx = Math.max(0.5, w / 29), ry = Math.max(0.5, h / 96);
+  for (const t of [map, emissiveMap]) {
+    t.repeat.set(rx, ry);
+    t.offset.set(Math.floor(random() * 16) / 16, Math.floor(random() * 32) / 32);
+    t.needsUpdate = true;
+  }
+  const side = new THREE.MeshLambertMaterial({ map, emissive: "#ffffff", emissiveMap, emissiveIntensity: 0.7 });
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), [side, side, roofMat, roofMat, side, side]);
+  m.position.set(x, y0 + h / 2, z);
   scene.add(m);
-  return m;
+  // Cornice at the top of masonry blocks
+  if (!f.kind.includes("glass")) {
+    const c = new THREE.Mesh(new THREE.BoxGeometry(w + 0.8, 0.9, d + 0.8), corniceMat);
+    c.position.set(x, y0 + h + 0.45, z);
+    scene.add(c);
+  }
+}
+
+function rooftop(x, y, z, w, d, fi) {
+  const f = FACADES[fi];
+  if (!f.kind.includes("glass") && random() < 0.6) {
+    // Classic NYC water tower on legs
+    const tank = new THREE.Group();
+    const barrel = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.4, 2.6, 10), tankMat);
+    barrel.position.y = 3.3;
+    const cap = new THREE.Mesh(new THREE.ConeGeometry(1.6, 1.2, 10), tankMat);
+    cap.position.y = 5.2;
+    tank.add(barrel, cap);
+    for (const [lx, lz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
+      const leg = new THREE.Mesh(new THREE.BoxGeometry(0.15, 2, 0.15), roofMat);
+      leg.position.set(lx, 1, lz);
+      tank.add(leg);
+    }
+    tank.position.set(x + rng(-w / 4, w / 4), y, z + rng(-d / 4, d / 4));
+    scene.add(tank);
+  }
+  // Mechanical boxes
+  for (let i = 0; i < Math.floor(rng(1, 3)); i++) {
+    const bw = rng(2, w * 0.35), bh = rng(1.2, 3), bd = rng(2, d * 0.35);
+    const box = new THREE.Mesh(new THREE.BoxGeometry(bw, bh, bd), roofMat);
+    box.position.set(x + rng(-w / 4, w / 4), y + bh / 2, z + rng(-d / 4, d / 4));
+    scene.add(box);
+  }
+  // Antenna on glass towers, with a red aircraft light
+  if (f.kind.includes("glass") && random() < 0.5) {
+    const ant = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 6, 6), roofMat);
+    ant.position.set(x, y + 3, z);
+    const light = new THREE.Mesh(new THREE.SphereGeometry(0.3, 8, 6), new THREE.MeshBasicMaterial({ color: "#ff3b3b" }));
+    light.position.set(x, y + 6.1, z);
+    scene.add(ant, light);
+  }
+}
+
+// A building: a base block plus setbacks as it gets taller, a roof, and on the
+// square a lit storefront band at street level.
+function building(x, z, w, d, h, fi, onSquare = false) {
+  if (fi === undefined) fi = Math.floor(random() * FACADES.length);
+  let y = 0, bw = w, bd = d;
+  const tiers = h > 60 ? 3 : h > 38 ? 2 : 1;
+  const heights = tiers === 3 ? [0.55, 0.28, 0.17] : tiers === 2 ? [0.7, 0.3] : [1];
+  for (let t = 0; t < tiers; t++) {
+    const th = h * heights[t];
+    blockMesh(x, y, z, bw, bd, th, fi);
+    y += th + (FACADES[fi].kind.includes("glass") ? 0 : 0.9);
+    // Step back toward the building's center (away from the street) each tier
+    bw *= 0.8; bd *= 0.82;
+  }
+  rooftop(x, y, z, bw, bd, fi);
+  if (onSquare) {
+    // Storefront band facing the street, with a lit sign above it
+    const dir = Math.sign(-x) || 1;
+    const shop = new THREE.Mesh(new THREE.PlaneGeometry(d * 0.92, 3.2),
+      new THREE.MeshBasicMaterial({ color: "#fff1d6", toneMapped: false }));
+    shop.rotation.y = dir * Math.PI / 2;
+    shop.position.set(x + dir * (w / 2 + 0.05), 1.7, z);
+    scene.add(shop);
+    const sign = new THREE.Mesh(new THREE.PlaneGeometry(d * 0.7, 0.9),
+      new THREE.MeshBasicMaterial({ color: shopColors[Math.floor(random() * shopColors.length)], toneMapped: false }));
+    sign.rotation.y = dir * Math.PI / 2;
+    sign.position.set(x + dir * (w / 2 + 0.06), 4, z);
+    scene.add(sign);
+  }
 }
 
 // Street, sidewalks, crosswalks
@@ -707,13 +838,12 @@ for (let i = 0; i < 6; i++) {
 scene.add(steps);
 
 // Side buildings, both sides of the square
-const rng = (a, b) => a + random() * (b - a);
 for (const side of [-1, 1]) {
   let z = 34;
   while (z > -120) {
     const d = rng(10, 16);
     // Inner faces stay at least 18 units from the street so billboards sit in front
-    building(side * rng(25, 28), z - d / 2, rng(10, 14), d, rng(28, 70));
+    building(side * rng(25, 28), z - d / 2, rng(10, 14), d, rng(28, 70), undefined, true);
     z -= d + 0.5;
   }
   // a second, taller row behind
@@ -729,8 +859,8 @@ tower.add(shaft);
 const crown = new THREE.Mesh(new THREE.BoxGeometry(7, 6, 6), towerMat);
 crown.position.y = 67;
 tower.add(crown);
-const mast = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.25, 8, 6), towerMat);
-mast.position.y = 74;
+const mast = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.25, 4, 6), towerMat);
+mast.position.y = 72;
 tower.add(mast);
 
 // The ball, low-poly and glowing
@@ -738,7 +868,7 @@ const ball = new THREE.Mesh(
   new THREE.IcosahedronGeometry(2.6, 1),
   new THREE.MeshStandardMaterial({ color: "#ffffff", emissive: "#9fd8ff", emissiveIntensity: 1.1, flatShading: true, metalness: 0.2, roughness: 0.3 })
 );
-ball.position.y = 79;
+ball.position.y = 75.6;
 tower.add(ball);
 tower.position.set(0, 0, -45);
 scene.add(tower);
@@ -792,13 +922,13 @@ const BOARDS = [
   { ad: "journey",   pos: [0, 48, -40.3],   rotY: 0, w: 8.6, h: 10.4 },
   { ad: "spider",    pos: [0, 36.5, -40.3], rotY: 0, w: 8.6, h: 10.4 },
   { ad: "ots",       pos: [0, 25, -40.3],   rotY: 0, w: 8.6, h: 10.4 },
-  { ad: "about",     pos: [-13.6, 27, 0],   rotY: 0.72, w: 11, h: 14.5 },
-  { ad: "brandinos", pos: [-9.9, 22, -30], rotY: 0.72, w: 13, h: 8.6 },
-  { ad: "draft",     pos: [-13.6, 41, -26], rotY: 0.7, w: 13, h: 8.8 },
-  { ad: "lego",      pos: [13.6, 27, 0],    rotY: -0.72, w: 11, h: 14.5 },
-  { ad: "vr",        pos: [10.6, 23, -30], rotY: -0.72, w: 8.5, h: 11 },
-  { ad: "robot",     pos: [13.6, 41.5, -24],  rotY: -0.7, w: 8.5, h: 10.5 },
-  { ad: "resume",    pos: [10.6, 10.5, -34], rotY: -0.7, w: 11, h: 5.5 },
+  { ad: "about",     pos: [-13.6, 32, 0],   rotY: 0.72, w: 11, h: 14.5 },
+  { ad: "brandinos", pos: [-9.9, 27, -30], rotY: 0.72, w: 13, h: 8.6 },
+  { ad: "draft",     pos: [-13.6, 46, -26], rotY: 0.7, w: 13, h: 8.8 },
+  { ad: "lego",      pos: [13.6, 32, 0],    rotY: -0.72, w: 11, h: 14.5 },
+  { ad: "vr",        pos: [10.6, 28, -30], rotY: -0.72, w: 8.5, h: 11 },
+  { ad: "robot",     pos: [13.6, 46.5, -24],  rotY: -0.7, w: 8.5, h: 10.5 },
+  { ad: "resume",    pos: [10.6, 15.5, -34], rotY: -0.7, w: 11, h: 5.5 },
 ];
 
 const boardMeshes = [];
