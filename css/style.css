@@ -1,21 +1,24 @@
 /* Brendan Nussenblatt — portfolio
-   Concept: a listing sheet. Each project reads like a property listing:
-   a large photo beside a short table of facts. */
+   Concept: Times Square at night. The homepage is a low-poly 3D Times Square
+   where every billboard is a designed ad for one of Brendan's projects. */
 
 :root {
-  --paper: #ffffff;
-  --panel: #f3f5f9;
-  --ink: #14213d;
-  --text: #39425a;
-  --muted: #6b7386;
-  --rule: #dce0e8;
-  --link: #1f4fe0;
-  --link-hover: #1438ad;
+  --paper: #0f0c24;          /* night sky */
+  --panel: #19163a;          /* facade panels */
+  --facade: #141130;
+  --ink: #f5f2ff;            /* headings */
+  --text: #c8c4e0;           /* body */
+  --muted: #8f8aad;
+  --rule: #2c2852;
+  --link: #ffb020;           /* LED amber */
+  --link-hover: #ffcb66;
 
   --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
-  --body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --body: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --sign: "Big Shoulders Display", "Archivo Narrow", Impact, sans-serif;
+  --led: "Doto", "Courier New", monospace;
 
-  --max: 1180px;
+  --max: 1240px;
   --gutter: clamp(16px, 4vw, 40px);
 }
 
@@ -23,10 +26,12 @@
 
 body {
   margin: 0;
-  background: var(--paper);
+  background:
+    radial-gradient(1200px 520px at 50% -160px, rgba(255, 120, 60, 0.16), transparent 70%),
+    var(--paper);
   color: var(--text);
   font-family: var(--body);
-  font-size: 1.125rem;
+  font-size: 1.0625rem;
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
 }
@@ -39,9 +44,9 @@ a:hover { color: var(--link-hover); text-decoration-thickness: 2px; }
 :focus-visible { outline: 2px solid var(--link); outline-offset: 3px; }
 
 h1, h2, h3 {
-  font-family: var(--display);
+  font-family: var(--sign);
   color: var(--ink);
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1.1;
   margin: 0;
 }
@@ -56,7 +61,7 @@ p { margin: 0 0 1em; max-width: 68ch; }
 
 /* ---------- Header ---------- */
 
-.site-header { border-bottom: 1px solid var(--rule); }
+.site-header { border-bottom: 1px solid var(--rule); background: rgba(15, 12, 36, 0.85); backdrop-filter: blur(8px); position: sticky; top: 0; z-index: 20; }
 
 .header-inner {
   display: flex;
@@ -94,12 +99,11 @@ p { margin: 0 0 1em; max-width: 68ch; }
 
 .hero h1 {
   grid-row: 1 / span 2;
-  font-size: clamp(2.5rem, 5.6vw, 4.6rem);
-  font-weight: 800;
-  font-stretch: 118%;
-  font-variation-settings: "wdth" 118;
-  letter-spacing: -0.03em;
-  line-height: 0.98;
+  font-size: clamp(3rem, 7vw, 6rem);
+  font-weight: 900;
+  letter-spacing: 0;
+  line-height: 0.9;
+  text-transform: uppercase;
   margin: 0;
 }
 
@@ -133,26 +137,24 @@ p { margin: 0 0 1em; max-width: 68ch; }
   display: inline-block;
   padding: 12px 22px;
   background: var(--link);
-  color: #fff;
+  color: #1a1205;
   font-family: var(--display);
-  font-weight: 600;
+  font-weight: 700;
   font-size: 1rem;
   text-decoration: none;
   border-radius: 3px;
 }
 
-.button:hover { background: var(--link-hover); color: #fff; }
+.button:hover { background: var(--link-hover); color: #1a1205; }
 
 .text-link { font-family: var(--display); font-weight: 600; font-size: 1rem; }
 
 /* ---------- Sections ---------- */
 
-.section { border-top: 2px solid var(--ink); padding: 28px 0 clamp(56px, 8vw, 96px); }
+.section { border-top: 2px solid var(--rule); padding: 28px 0 clamp(56px, 8vw, 96px); }
 
 .section > h2 {
-  font-size: clamp(1.6rem, 3vw, 2.2rem);
-  font-stretch: 112%;
-  font-variation-settings: "wdth" 112;
+  font-size: clamp(2rem, 4vw, 3rem);
   margin-bottom: clamp(28px, 4vw, 48px);
 }
 
@@ -183,13 +185,11 @@ p { margin: 0 0 1em; max-width: 68ch; }
 .listing-photo.tall img { object-position: 50% 30%; }
 .listing-photo img.focus-low { object-position: 50% 85%; }
 .listing-photo img.focus-mid-low { object-position: 50% 62%; }
-.listing-photo.logo-photo { padding: 12%; background: #fff; border: 1px solid var(--rule); }
+.listing-photo.logo-photo { padding: 12%; background: #fff; }
 .listing-photo.logo-photo img { object-fit: contain; mix-blend-mode: multiply; }
 
 .listing h3 {
-  font-size: clamp(1.5rem, 2.6vw, 2.1rem);
-  font-stretch: 112%;
-  font-variation-settings: "wdth" 112;
+  font-size: clamp(1.9rem, 3.2vw, 2.6rem);
   margin-bottom: 14px;
 }
 
@@ -239,7 +239,7 @@ p { margin: 0 0 1em; max-width: 68ch; }
 }
 
 .jobs .who { width: 34%; padding-right: 32px; }
-.jobs .who strong { display: block; font-family: var(--display); font-size: 1.2rem; color: var(--ink); }
+.jobs .who strong { display: block; font-family: var(--display); font-weight: 700; font-size: 1.15rem; color: var(--ink); }
 .jobs .who span { font-size: 1rem; color: var(--muted); }
 .jobs .what { color: var(--text); }
 
@@ -265,9 +265,7 @@ p { margin: 0 0 1em; max-width: 68ch; }
   font-family: var(--display);
   font-size: clamp(1.25rem, 2.6vw, 1.9rem);
   font-weight: 700;
-  font-stretch: 112%;
-  font-variation-settings: "wdth" 112;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   line-height: 1.1;
   color: var(--ink);
   text-decoration: underline;
@@ -296,12 +294,10 @@ p { margin: 0 0 1em; max-width: 68ch; }
 .case-context { margin: 0 0 12px; font-family: var(--display); color: var(--muted); font-size: 1rem; }
 
 .case-hero h1 {
-  font-size: clamp(2.2rem, 6vw, 4.6rem);
-  font-weight: 800;
-  font-stretch: 118%;
-  font-variation-settings: "wdth" 118;
-  letter-spacing: -0.03em;
-  line-height: 0.98;
+  font-size: clamp(2.6rem, 7vw, 5.4rem);
+  font-weight: 900;
+  line-height: 0.92;
+  text-transform: uppercase;
   margin-bottom: 20px;
   max-width: 16ch;
 }
@@ -355,3 +351,158 @@ p { margin: 0 0 1em; max-width: 68ch; }
 }
 
 .subhead { font-size: 1.2rem; margin-bottom: 10px; }
+
+/* ==========================================================
+   Homepage: a low-poly 3D Times Square (js/city.js)
+   ========================================================== */
+
+.city {
+  position: relative;
+  height: calc(100svh - 61px);
+  min-height: 520px;
+  overflow: hidden;
+  background: #0c0a22;
+}
+
+.city canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.city.is-ready canvas { opacity: 1; }
+
+/* Soft fade at the bottom so the name reads over the scene */
+.city::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 34%;
+  background: linear-gradient(to top, rgba(12, 10, 34, 0.92), transparent);
+  pointer-events: none;
+}
+
+.city-overlay, .city-panel, .city-tip { z-index: 2; }
+.city canvas:active { cursor: grabbing; }
+
+/* Name and instructions, bottom-left over the scene */
+.city-overlay {
+  position: absolute;
+  left: max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter)));
+  bottom: clamp(20px, 4vh, 40px);
+  max-width: 34rem;
+  pointer-events: none;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.8);
+}
+
+.city-overlay h1 {
+  font-size: clamp(2.2rem, 4.2vw, 3.6rem);
+  font-weight: 900;
+  line-height: 0.9;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.city-overlay p { margin: 10px 0 0; color: #e6e2ff; font-size: 1rem; }
+.city-overlay { transition: opacity 0.3s ease; }
+.city.is-focused .city-overlay, .city.is-focused::after { opacity: 0; }
+.city::after { transition: opacity 0.3s ease; }
+
+/* Name tag that follows the pointer over a billboard */
+.city-tip {
+  position: absolute;
+  z-index: 3;
+  transform: translate(14px, -130%);
+  padding: 6px 12px;
+  background: #ffb020;
+  color: #1a1205;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  border-radius: 3px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+.city-tip.is-visible { opacity: 1; }
+
+/* Project panel that slides in when you fly to a billboard */
+.city-panel {
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  right: var(--gutter);
+  width: min(26rem, calc(100% - 2 * var(--gutter)));
+  padding: 26px 26px 22px;
+  background: rgba(15, 12, 36, 0.92);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  backdrop-filter: blur(8px);
+  transform: translate(24px, -50%);
+  opacity: 0;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.city-panel.is-open { opacity: 1; transform: translate(0, -50%); }
+.city-panel .kicker { display: block; color: var(--link); font-family: var(--display); font-weight: 700; font-size: 0.85rem; margin-bottom: 6px; }
+.city-panel h2 { font-size: 2.2rem; line-height: 0.95; text-transform: uppercase; margin-bottom: 12px; }
+.city-panel p { color: var(--text); font-size: 1rem; margin-bottom: 20px; }
+
+button.text-link {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--link);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  cursor: pointer;
+}
+
+.city-fallback { position: absolute; inset: auto var(--gutter) 40% var(--gutter); color: var(--text); }
+
+@media (max-width: 620px) {
+  .city-panel { top: auto; bottom: var(--gutter); transform: translate(0, 24px); }
+  .city-panel.is-open { transform: translate(0, 0); }
+}
+
+/* "Now showing" list under the scene */
+.playbill { list-style: none; margin: 0; padding: 0; counter-reset: show; }
+.playbill li { border-top: 1px solid var(--rule); }
+.playbill li:last-child { border-bottom: 1px solid var(--rule); }
+.playbill a {
+  display: grid;
+  grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
+  gap: 6px 32px;
+  padding: 16px 0;
+  color: var(--text);
+  text-decoration: none;
+}
+.playbill strong { font-family: var(--sign); font-weight: 800; font-size: 1.5rem; color: var(--ink); text-transform: uppercase; line-height: 1.05; }
+.playbill a:hover strong { color: var(--link); }
+
+/* Street level */
+.street { padding-top: clamp(48px, 7vw, 96px); }
+
+.intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+  gap: 24px clamp(32px, 5vw, 72px);
+  padding-bottom: clamp(48px, 7vw, 88px);
+}
+
+.intro h2 { font-size: clamp(2.6rem, 5vw, 4rem); line-height: 0.95; text-transform: uppercase; }
+.intro p { font-size: clamp(1.1rem, 1.6vw, 1.3rem); color: var(--ink); margin-bottom: 28px; }
+
+@media (max-width: 620px) {
+  .intro { grid-template-columns: 1fr; }
+  .playbill a { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .city canvas, .city-panel, .city-tip { transition: none; }
+}

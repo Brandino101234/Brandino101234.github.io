@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Brendan Nussenblatt | Portfolio</title>
-  <meta name="description" content="Brendan Nussenblatt: Informatics graduate from Indiana University working where data, commercial real estate, and digital products meet." />
+  <meta name="description" content="Brendan Nussenblatt: designer and Indiana University Informatics graduate who designs and builds digital products." />
   <meta property="og:title" content="Brendan Nussenblatt | Portfolio" />
-  <meta property="og:description" content="Informatics graduate working where data, commercial real estate, and digital products meet." />
+  <meta property="og:description" content="Designer and Informatics graduate who designs and builds digital products." />
   <meta property="og:image" content="https://brandino101234.github.io/assets/images/about/nasdaq.jpg" />
   <meta property="og:image:width" content="1182" />
   <meta property="og:image:height" content="665" />
@@ -14,19 +14,20 @@
   <meta property="og:url" content="https://brandino101234.github.io/" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta property="og:type" content="website" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%2314213d'/><text x='50%' y='56%' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-weight='800' font-size='30' fill='white'>BN</text></svg>" />
+  <meta name="theme-color" content="#0f0c24" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%230f0c24'/><text x='50%' y='56%' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-weight='800' font-size='30' fill='%23ffb020'>BN</text></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" />
-  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&family=Big+Shoulders+Display:wght@700;800;900&family=Doto:wght@700;900&display=swap" />
+  <link rel="stylesheet" href="./css/style.css?v=city3" />
 </head>
-<body>
+<body class="home">
 
   <header class="site-header">
     <div class="container header-inner">
       <a class="logo" href="index.html">Brendan Nussenblatt</a>
       <nav class="nav">
-        <a href="#work">Work</a>
+        <a href="#projects">Work</a>
         <a class="nav-extra" href="#experience">Experience</a>
         <a href="about.html">About</a>
         <a href="assets/resume/brendan-nussenblatt-resume.pdf" target="_blank" rel="noopener">Resume</a>
@@ -34,199 +35,100 @@
     </div>
   </header>
 
-  <main class="container">
+  <main>
 
-    <section class="hero">
-      <div class="hero-text">
+    <!-- A low-poly Times Square in 3D (js/city.js). Each billboard is a designed
+         ad for a project; click one to fly to it. -->
+    <section class="city" id="work" aria-label="Work: an interactive 3D Times Square">
+      <div class="city-overlay">
         <h1>Brendan Nussenblatt</h1>
-        <p>
-          Informatics graduate from Indiana University, with minors in Business and Financial Literacy
-          from the Kelley School. I work where data, commercial real estate, and digital products meet.
-          Based in New York.
-        </p>
-        <div class="actions">
-          <a class="button" href="mailto:brendannussenblatt@gmail.com">Email me</a>
-          <a class="text-link" href="assets/resume/brendan-nussenblatt-resume.pdf" target="_blank" rel="noopener">Resume (PDF)</a>
-        </div>
+        <p>Designer, New York. Drag to look around, then click a billboard.</p>
       </div>
-      <figure class="hero-photo">
-        <img src="assets/images/about/nasdaq.jpg" alt="Brendan smiling at a podium at Nasdaq, with the Times Square Alliance logo behind him" />
-      </figure>
+      <span class="city-tip" aria-hidden="true"></span>
+      <aside class="city-panel" hidden aria-live="polite">
+        <span class="kicker"></span>
+        <h2></h2>
+        <p></p>
+        <div class="actions">
+          <a class="button open" href="#">Open the project</a>
+          <button class="text-link back" type="button">Back to the square</button>
+        </div>
+      </aside>
+      <noscript><p class="city-fallback">This view needs JavaScript. Every project is listed below.</p></noscript>
     </section>
 
-    <section class="section" id="work">
-      <h2>Work</h2>
-
-      <article class="listing lead">
-        <a class="listing-photo logo-photo" href="https://zion.luddy.indiana.edu/info-capstone-2026/journey" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
-          <img src="assets/images/Journey.png" alt="" />
-        </a>
-        <div class="listing-body">
-          <h3><a href="https://zion.luddy.indiana.edu/info-capstone-2026/journey" target="_blank" rel="noopener">Journey</a></h3>
+    <!-- Street level: the plain-spoken part -->
+    <div class="container street">
+      <section class="intro">
+        <h2>Hi, I'm Brendan.</h2>
+        <div>
           <p>
-            A child growth and nutrition tracking platform for parents and healthcare providers. It tracks
-            growth over time, flags concerning trends, and sends health alerts.
+            I'm a designer and Informatics graduate from Indiana University. I design and build digital
+            products, from user research and information architecture to working front-end code, with a
+            business background from the Kelley School.
           </p>
-          <dl class="specs">
-            <div><dt>Type</dt><dd>Informatics capstone, Indiana University</dd></div>
-            <div><dt>Year</dt><dd>2026</dd></div>
-            <div><dt>Features</dt><dd>Growth analytics, trend monitoring, health alerts</dd></div>
-          </dl>
-          <a class="text-link" href="https://zion.luddy.indiana.edu/info-capstone-2026/journey" target="_blank" rel="noopener">See the capstone page</a>
-        </div>
-      </article>
-
-      <article class="listing">
-        <a class="listing-photo" href="projects/spiderman.html" tabindex="-1" aria-hidden="true">
-          <img src="assets/images/swinging_spiderman_cover.webp" alt="" loading="lazy" />
-        </a>
-        <div class="listing-body">
-          <h3><a href="projects/spiderman.html">Spider-Man History Website</a></h3>
-          <p>
-            A multi-page archive of Spider-Man's evolution across decades, creators, and villains, organized
-            so the history is easy to explore.
-          </p>
-          <dl class="specs">
-            <div><dt>Type</dt><dd>Multi-page website</dd></div>
-            <div><dt>Built with</dt><dd>HTML, CSS, JavaScript</dd></div>
-            <div><dt>Focus</dt><dd>Information architecture, navigation</dd></div>
-          </dl>
-          <a class="text-link" href="projects/spiderman.html">Read about the project</a>
-        </div>
-      </article>
-
-      <article class="listing">
-        <a class="listing-photo" href="projects/fortnite.html" tabindex="-1" aria-hidden="true">
-          <img src="assets/images/OTS2.jpg" alt="" loading="lazy" />
-        </a>
-        <div class="listing-body">
-          <h3><a href="projects/fortnite.html">Fortnite × One Times Square</a></h3>
-          <p>
-            A custom Fortnite Creative map built for the Times Square New Year's Eve celebration.
-          </p>
-          <dl class="specs">
-            <div><dt>Context</dt><dd>Fly Studio internship</dd></div>
-            <div><dt>Platform</dt><dd>Fortnite Creative</dd></div>
-            <div><dt>Result</dt><dd>2M+ views on Fortnite's official Instagram</dd></div>
-          </dl>
-          <a class="text-link" href="projects/fortnite.html">Read about the project</a>
-        </div>
-      </article>
-
-      <article class="listing">
-        <a class="listing-photo" href="https://brandino101234.github.io/lego-intelligence-agent/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
-          <img src="assets/images/lego-intel.jpg" alt="" loading="lazy" />
-        </a>
-        <div class="listing-body">
-          <h3><a href="https://brandino101234.github.io/lego-intelligence-agent/" target="_blank" rel="noopener">LEGO Intelligence Agent</a></h3>
-          <p>
-            A dashboard that tracks upcoming LEGO releases, sets about to retire, gifts with purchase, and the
-            BrickLink Designer Program. Python scrapers run on a schedule and rebuild the site automatically.
-          </p>
-          <dl class="specs">
-            <div><dt>Type</dt><dd>Data tracking dashboard</dd></div>
-            <div><dt>Built with</dt><dd>Python, GitHub Actions, HTML/CSS/JavaScript</dd></div>
-            <div><dt>Tracks</dt><dd>Release calendar, retiring sets, gifts with purchase, Designer Program</dd></div>
-          </dl>
-          <a class="text-link" href="https://brandino101234.github.io/lego-intelligence-agent/" target="_blank" rel="noopener">Open the dashboard</a>
-        </div>
-      </article>
-
-      <article class="listing">
-        <a class="listing-photo fit-dark" href="https://draft-dna.streamlit.app" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
-          <img src="assets/images/draft-dna.jpg" alt="" loading="lazy" />
-        </a>
-        <div class="listing-body">
-          <h3><a href="https://draft-dna.streamlit.app" target="_blank" rel="noopener">Draft DNA</a></h3>
-          <p>
-            Can you predict an NBA prospect's career from what's known on draft night? I built a data pipeline
-            and forecasting models for every pick from 1996 to 2026, tested them against simple baselines, and
-            grade each player as his career unfolds.
-          </p>
-          <dl class="specs">
-            <div><dt>Type</dt><dd>NBA draft analytics</dd></div>
-            <div><dt>Built with</dt><dd>Python, DuckDB, Streamlit</dd></div>
-            <div><dt>Data</dt><dd>1,833 draft picks and 12,415 NBA seasons</dd></div>
-            <div><dt>Finding</dt><dd>Draft position alone forecast careers as well as any stats-based model</dd></div>
-          </dl>
           <div class="actions">
-            <a class="text-link" href="https://draft-dna.streamlit.app" target="_blank" rel="noopener">Open the app</a>
-            <a class="text-link" href="https://github.com/Brandino101234/draft-dna" target="_blank" rel="noopener">See the code on GitHub</a>
+            <a class="button" href="mailto:brendannussenblatt@gmail.com">Email me</a>
+            <a class="text-link" href="about.html">More about me</a>
           </div>
         </div>
-      </article>
+      </section>
 
-      <article class="listing">
-        <a class="listing-photo" href="https://www.youtube.com/watch?v=U2gG0RcOsK4" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
-          <img src="assets/images/VRcover.jpg" alt="" loading="lazy" />
-        </a>
-        <div class="listing-body">
-          <h3><a href="https://www.youtube.com/watch?v=U2gG0RcOsK4" target="_blank" rel="noopener">Mindfulness in Virtual Reality</a></h3>
-          <p>
-            An immersive meditation experience with interactive environments and calming visuals, designed
-            to help people relax.
-          </p>
-          <dl class="specs">
-            <div><dt>Type</dt><dd>VR experience</dd></div>
-            <div><dt>Built with</dt><dd>Unity</dd></div>
-          </dl>
-          <a class="text-link" href="https://www.youtube.com/watch?v=U2gG0RcOsK4" target="_blank" rel="noopener">Watch the demo on YouTube</a>
+      <section class="section" id="projects">
+        <h2>Now showing</h2>
+        <ol class="playbill">
+          <li><a href="https://zion.luddy.indiana.edu/info-capstone-2026/journey" target="_blank" rel="noopener"><strong>Journey</strong><span>Capstone. Child growth and nutrition tracking for parents and healthcare providers.</span></a></li>
+          <li><a href="projects/spiderman.html"><strong>Spider-History</strong><span>Web design. A 12-page Spider-Man archive organized by decade, creators, and villains.</span></a></li>
+          <li><a href="about.html"><strong>BrandinosBuilds</strong><span>Brand and content design. Thumbnails, channel art, and series formats for a LEGO brand on TikTok, Instagram, and YouTube.</span></a></li>
+          <li><a href="https://brandino101234.github.io/lego-intelligence-agent/" target="_blank" rel="noopener"><strong>LEGO Intelligence Agent</strong><span>Dashboard. Tracks LEGO releases and retiring sets, rebuilt automatically by Python scrapers.</span></a></li>
+          <li><a href="projects/fortnite.html"><strong>Fortnite × One Times Square</strong><span>Fly Studio. A New Year's Eve Fortnite Creative map that reached 2M+ views.</span></a></li>
+          <li><a href="https://www.youtube.com/watch?v=U2gG0RcOsK4" target="_blank" rel="noopener"><strong>Mindfulness in VR</strong><span>Unity. An immersive meditation experience.</span></a></li>
+          <li><a href="https://draft-dna.streamlit.app" target="_blank" rel="noopener"><strong>Draft DNA</strong><span>Data app. NBA draft analytics with prospect cards for 1,833 picks.</span></a></li>
+          <li><a href="projects/robot.html"><strong>Arduino Tank Robot</strong><span>Hardware. A servo-driven tank robot with custom control logic.</span></a></li>
+        </ol>
+      </section>
+
+      <section class="section" id="experience">
+        <h2>Experience</h2>
+        <table class="jobs">
+          <tr>
+            <td class="when">2025 – Present</td>
+            <td class="who"><strong>BrandinosBuilds</strong><span>Founder and Content Designer, New York</span></td>
+            <td class="what">Design and produce all visual content for a LEGO brand across TikTok, Instagram, and YouTube, and built the brand's visual identity across all three platforms.</td>
+          </tr>
+          <tr>
+            <td class="when">May 2023 – Early 2025</td>
+            <td class="who"><strong>Fly Studio / Behaviour</strong><span>Design Intern, Montreal</span></td>
+            <td class="what">Designed and launched a Fortnite Creative map for a New Year's Eve campaign that reached 2M+ views, and pitched AI-driven concepts to improve in-game user experience.</td>
+          </tr>
+          <tr>
+            <td class="when">Jun – Aug 2025</td>
+            <td class="who"><strong>SitusAMC</strong><span>Credit Analytics Intern, New York</span></td>
+            <td class="what">Built and maintained Excel models tracking loan documentation and supporting underwriting across CMBS and transitional loans.</td>
+          </tr>
+          <tr>
+            <td class="when">May – Aug 2024</td>
+            <td class="who"><strong>Compass</strong><span>Commercial Real Estate Intern, New York</span></td>
+            <td class="what">Analyzed 100+ high-traffic markets with CoStar and PropertyShark, generating targeted property lists and coordinating investor tours.</td>
+          </tr>
+          <tr>
+            <td class="when">Jun – Aug 2023</td>
+            <td class="who"><strong>New Tradition Media</strong><span>Intern, New York</span></td>
+            <td class="what">Built national prospecting lists by analyzing media buyers and advertiser activity, matching advertiser demand with available signage inventory.</td>
+          </tr>
+        </table>
+      </section>
+
+      <section class="section" id="contact">
+        <h2>Contact</h2>
+        <p>Email is the best way to reach me. I'm happy to walk through any of these projects.</p>
+        <a class="contact-email" href="mailto:brendannussenblatt@gmail.com">brendannussenblatt@gmail.com</a>
+        <div class="actions">
+          <a class="text-link" href="https://www.linkedin.com/in/brendannussenblatt/" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="text-link" href="https://github.com/Brandino101234" target="_blank" rel="noopener">GitHub</a>
         </div>
-      </article>
-
-      <article class="listing">
-        <a class="listing-photo" href="projects/robot.html" tabindex="-1" aria-hidden="true">
-          <img class="focus-mid-low" src="assets/images/arduino2.jpg" alt="" loading="lazy" />
-        </a>
-        <div class="listing-body">
-          <h3><a href="projects/robot.html">Arduino Tank Robot</a></h3>
-          <p>
-            A tank-style robot with servo-driven movement and custom control logic, tested on video.
-          </p>
-          <dl class="specs">
-            <div><dt>Type</dt><dd>Physical computing</dd></div>
-            <div><dt>Built with</dt><dd>Arduino, servo motors</dd></div>
-          </dl>
-          <a class="text-link" href="projects/robot.html">Read about the project</a>
-        </div>
-      </article>
-    </section>
-
-    <section class="section" id="experience">
-      <h2>Experience</h2>
-      <table class="jobs">
-        <tr>
-          <td class="when">Jun – Aug 2025</td>
-          <td class="who"><strong>SitusAMC</strong><span>Credit Analytics Intern, New York</span></td>
-          <td class="what">Analyzed as-is and stabilized cash flows for commercial real estate loan portfolios, validated DSCR and LTV, and built Excel models supporting underwriting across CMBS and transitional loans.</td>
-        </tr>
-        <tr>
-          <td class="when">May – Aug 2024</td>
-          <td class="who"><strong>Compass</strong><span>Commercial Real Estate Intern, New York</span></td>
-          <td class="what">Analyzed 100+ high-traffic markets with CoStar and PropertyShark for site selection, and evaluated 20+ locations nationwide for a pickleball court expansion.</td>
-        </tr>
-        <tr>
-          <td class="when">Jun – Aug 2023</td>
-          <td class="who"><strong>New Tradition Media</strong><span>Intern, New York</span></td>
-          <td class="what">Built national prospecting lists by analyzing media buyers and advertiser activity, matching advertiser demand with available signage inventory.</td>
-        </tr>
-        <tr>
-          <td class="when">May 2023</td>
-          <td class="who"><strong>Fly Studio</strong><span>Intern, Montreal</span></td>
-          <td class="what">Pitched AI-driven game concepts to senior leadership and helped design a Fortnite Creative map for a New Year's Eve campaign that reached 2M+ views.</td>
-        </tr>
-      </table>
-    </section>
-
-    <section class="section" id="contact">
-      <h2>Contact</h2>
-      <p>Email is the best way to reach me. I'm happy to walk through any of these projects.</p>
-      <a class="contact-email" href="mailto:brendannussenblatt@gmail.com">brendannussenblatt@gmail.com</a>
-      <div class="actions">
-        <a class="text-link" href="https://www.linkedin.com/in/brendannussenblatt/" target="_blank" rel="noopener">LinkedIn</a>
-        <a class="text-link" href="https://github.com/Brandino101234" target="_blank" rel="noopener">GitHub</a>
-      </div>
-    </section>
+      </section>
+    </div>
 
   </main>
 
@@ -234,6 +136,15 @@
     <div class="container">© <span id="year">2026</span> Brendan Nussenblatt</div>
   </footer>
 
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module" src="js/city.js?v=8"></script>
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
