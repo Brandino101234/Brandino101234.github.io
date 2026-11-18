@@ -125,7 +125,7 @@ p { margin: 0 0 1em; max-width: 68ch; }
 }
 
 /* Portrait shots: keep the head in frame instead of the bottom of the photo */
-.hero-photo img.focus-top { object-position: 50% 12%; }
+.hero-photo img.focus-top { object-position: 50% 59%; }
 
 .actions { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; }
 
