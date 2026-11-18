@@ -77,7 +77,7 @@ p { margin: 0 0 1em; max-width: 68ch; }
 .nav a:hover { color: var(--link); text-decoration: underline; }
 .nav a[aria-current="page"] { color: var(--ink); font-weight: 700; }
 
-/* ---------- Hero: photo on top, then name and intro ---------- */
+/* ---------- Hero: full-width photo, then name beside the intro ---------- */
 
 .hero {
   display: grid;
@@ -85,31 +85,42 @@ p { margin: 0 0 1em; max-width: 68ch; }
   padding: clamp(24px, 4vw, 48px) 0 clamp(48px, 7vw, 88px);
 }
 
+.hero-text {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  column-gap: clamp(32px, 5vw, 72px);
+  align-items: start;
+}
+
 .hero h1 {
+  grid-row: 1 / span 2;
   font-size: clamp(2.5rem, 5.6vw, 4.6rem);
   font-weight: 800;
   font-stretch: 118%;
   font-variation-settings: "wdth" 118;
   letter-spacing: -0.03em;
   line-height: 0.98;
-  margin-bottom: 24px;
+  margin: 0;
 }
 
 .hero-text p {
-  margin: 0 0 32px;
+  grid-column: 2;
+  margin: 0 0 28px;
   font-size: clamp(1.15rem, 1.7vw, 1.35rem);
   line-height: 1.55;
   color: var(--ink);
-  max-width: 52ch;
 }
 
-.hero-photo { margin: 0; order: -1; max-width: 820px; }
+.hero-text .actions { grid-column: 2; }
+
+.hero-photo { margin: 0; order: -1; }
 
 .hero-photo img {
   width: 100%;
   aspect-ratio: 16 / 9;
+  max-height: 540px;
   object-fit: cover;
-  object-position: 50% 30%;
+  object-position: 50% 92%;
   border-radius: 2px;
 }
 
@@ -167,6 +178,8 @@ p { margin: 0 0 1em; max-width: 68ch; }
 .listing-photo.fit-dark { background: #0c0b10; }
 .listing-photo.fit-dark img { object-fit: contain; }
 .listing-photo.tall img { object-position: 50% 30%; }
+.listing-photo img.focus-low { object-position: 50% 85%; }
+.listing-photo img.focus-mid-low { object-position: 50% 62%; }
 .listing-photo.logo-photo { padding: 12%; background: #fff; border: 1px solid var(--rule); }
 .listing-photo.logo-photo img { object-fit: contain; mix-blend-mode: multiply; }
 
@@ -247,7 +260,7 @@ p { margin: 0 0 1em; max-width: 68ch; }
   display: inline-block;
   margin: 4px 0 28px;
   font-family: var(--display);
-  font-size: clamp(1.4rem, 4.6vw, 3.4rem);
+  font-size: clamp(1.25rem, 2.6vw, 1.9rem);
   font-weight: 700;
   font-stretch: 112%;
   font-variation-settings: "wdth" 112;
@@ -323,6 +336,9 @@ p { margin: 0 0 1em; max-width: 68ch; }
 @media (max-width: 860px) {
   .listing, .listing.lead, .about, .case-grid { grid-template-columns: 1fr; }
   .jobs .who { width: auto; }
+  .hero-text { grid-template-columns: 1fr; }
+  .hero h1 { grid-row: auto; margin-bottom: 20px; }
+  .hero-text p, .hero-text .actions { grid-column: 1; }
 }
 
 @media (max-width: 640px) {
