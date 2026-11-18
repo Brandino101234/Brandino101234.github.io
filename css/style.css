@@ -3,20 +3,18 @@
    where every billboard is a designed ad for one of Brendan's projects. */
 
 :root {
-  --paper: #0f0c24;          /* night sky */
+  --paper: #121331;          /* night sky, matches the 3D scene */
   --panel: #19163a;          /* facade panels */
   --facade: #141130;
   --ink: #f5f2ff;            /* headings */
   --text: #c8c4e0;           /* body */
   --muted: #8f8aad;
   --rule: #2c2852;
-  --link: #ffb020;           /* LED amber */
-  --link-hover: #ffcb66;
+  --link: #ffffff;
+  --link-hover: #d9dcff;
 
   --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
   --body: "Archivo", "Helvetica Neue", Arial, sans-serif;
-  --sign: "Big Shoulders Display", "Archivo Narrow", Impact, sans-serif;
-  --led: "Doto", "Courier New", monospace;
 
   --max: 1240px;
   --gutter: clamp(16px, 4vw, 40px);
@@ -26,9 +24,7 @@
 
 body {
   margin: 0;
-  background:
-    radial-gradient(1200px 520px at 50% -160px, rgba(255, 120, 60, 0.16), transparent 70%),
-    var(--paper);
+  background: var(--paper);
   color: var(--text);
   font-family: var(--body);
   font-size: 1.0625rem;
@@ -44,9 +40,10 @@ a:hover { color: var(--link-hover); text-decoration-thickness: 2px; }
 :focus-visible { outline: 2px solid var(--link); outline-offset: 3px; }
 
 h1, h2, h3 {
-  font-family: var(--sign);
+  font-family: var(--display);
   color: var(--ink);
   font-weight: 800;
+  letter-spacing: -0.02em;
   line-height: 1.1;
   margin: 0;
 }
@@ -99,11 +96,9 @@ p { margin: 0 0 1em; max-width: 68ch; }
 
 .hero h1 {
   grid-row: 1 / span 2;
-  font-size: clamp(3rem, 7vw, 6rem);
-  font-weight: 900;
-  letter-spacing: 0;
-  line-height: 0.9;
-  text-transform: uppercase;
+  font-size: clamp(2.6rem, 5.4vw, 4.4rem);
+  font-weight: 800;
+  line-height: 0.98;
   margin: 0;
 }
 
@@ -136,8 +131,8 @@ p { margin: 0 0 1em; max-width: 68ch; }
 .button {
   display: inline-block;
   padding: 12px 22px;
-  background: var(--link);
-  color: #1a1205;
+  background: #ffffff;
+  color: #121331;
   font-family: var(--display);
   font-weight: 700;
   font-size: 1rem;
@@ -145,7 +140,7 @@ p { margin: 0 0 1em; max-width: 68ch; }
   border-radius: 3px;
 }
 
-.button:hover { background: var(--link-hover); color: #1a1205; }
+.button:hover { background: #d9dcff; color: #121331; }
 
 .text-link { font-family: var(--display); font-weight: 600; font-size: 1rem; }
 
@@ -294,10 +289,9 @@ p { margin: 0 0 1em; max-width: 68ch; }
 .case-context { margin: 0 0 12px; font-family: var(--display); color: var(--muted); font-size: 1rem; }
 
 .case-hero h1 {
-  font-size: clamp(2.6rem, 7vw, 5.4rem);
-  font-weight: 900;
-  line-height: 0.92;
-  text-transform: uppercase;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 1;
   margin-bottom: 20px;
   max-width: 16ch;
 }
@@ -368,48 +362,47 @@ p { margin: 0 0 1em; max-width: 68ch; }
   display: block;
   width: 100%;
   height: 100%;
-  cursor: grab;
+  cursor: ew-resize;
   opacity: 0;
   transition: opacity 0.8s ease;
 }
 
 .city.is-ready canvas { opacity: 1; }
 
-/* Soft fade at the bottom so the name reads over the scene */
-.city::after {
-  content: "";
+.city-panel, .city-tip { z-index: 3; }
+
+
+/* One plain line of instructions under the scene's bottom edge */
+.city-hint {
   position: absolute;
-  inset: auto 0 0 0;
-  height: 34%;
-  background: linear-gradient(to top, rgba(12, 10, 34, 0.92), transparent);
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 6px 12px;
+  background: rgba(18, 19, 49, 0.75);
+  color: var(--text);
+  font-size: 0.85rem;
+  width: max-content;
+  max-width: calc(100% - 32px);
+  text-align: center;
+  border-radius: 3px;
   pointer-events: none;
+  z-index: 2;
 }
 
-.city-overlay, .city-panel, .city-tip { z-index: 2; }
-.city canvas:active { cursor: grabbing; }
-
-/* Name and instructions, bottom-left over the scene */
-.city-overlay {
+.visually-hidden {
   position: absolute;
-  left: max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter)));
-  bottom: clamp(20px, 4vh, 40px);
-  max-width: 34rem;
-  pointer-events: none;
-  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.8);
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
-.city-overlay h1 {
-  font-size: clamp(2.2rem, 4.2vw, 3.6rem);
-  font-weight: 900;
-  line-height: 0.9;
-  text-transform: uppercase;
-  color: #fff;
-}
-
-.city-overlay p { margin: 10px 0 0; color: #e6e2ff; font-size: 1rem; }
-.city-overlay { transition: opacity 0.3s ease; }
-.city.is-focused .city-overlay, .city.is-focused::after { opacity: 0; }
-.city::after { transition: opacity 0.3s ease; }
+.city.is-focused .city-hint { opacity: 0; }
+.hint-narrow { display: none; }
+@media (max-width: 760px) { .hint-wide { display: none; } .hint-narrow { display: inline; } }
 
 /* Name tag that follows the pointer over a billboard */
 .city-tip {
@@ -417,11 +410,11 @@ p { margin: 0 0 1em; max-width: 68ch; }
   z-index: 3;
   transform: translate(14px, -130%);
   padding: 6px 12px;
-  background: #ffb020;
-  color: #1a1205;
+  background: #ffffff;
+  color: #121331;
   font-family: var(--display);
-  font-weight: 700;
-  font-size: 0.95rem;
+  font-weight: 600;
+  font-size: 0.9rem;
   white-space: nowrap;
   border-radius: 3px;
   pointer-events: none;
@@ -449,8 +442,8 @@ p { margin: 0 0 1em; max-width: 68ch; }
 }
 
 .city-panel.is-open { opacity: 1; transform: translate(0, -50%); }
-.city-panel .kicker { display: block; color: var(--link); font-family: var(--display); font-weight: 700; font-size: 0.85rem; margin-bottom: 6px; }
-.city-panel h2 { font-size: 2.2rem; line-height: 0.95; text-transform: uppercase; margin-bottom: 12px; }
+.city-panel .kicker { display: block; color: var(--muted); font-family: var(--display); font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; }
+.city-panel h2 { font-size: 1.8rem; line-height: 1.05; margin-bottom: 12px; }
 .city-panel p { color: var(--text); font-size: 1rem; margin-bottom: 20px; }
 
 button.text-link {
@@ -482,8 +475,8 @@ button.text-link {
   color: var(--text);
   text-decoration: none;
 }
-.playbill strong { font-family: var(--sign); font-weight: 800; font-size: 1.5rem; color: var(--ink); text-transform: uppercase; line-height: 1.05; }
-.playbill a:hover strong { color: var(--link); }
+.playbill strong { font-family: var(--display); font-weight: 700; font-size: 1.2rem; color: var(--ink); line-height: 1.2; }
+.playbill a:hover strong { text-decoration: underline; text-underline-offset: 0.18em; }
 
 /* Street level */
 .street { padding-top: clamp(48px, 7vw, 96px); }
@@ -495,7 +488,7 @@ button.text-link {
   padding-bottom: clamp(48px, 7vw, 88px);
 }
 
-.intro h2 { font-size: clamp(2.6rem, 5vw, 4rem); line-height: 0.95; text-transform: uppercase; }
+.intro h2 { font-size: clamp(2.2rem, 4vw, 3.2rem); line-height: 1; }
 .intro p { font-size: clamp(1.1rem, 1.6vw, 1.3rem); color: var(--ink); margin-bottom: 28px; }
 
 @media (max-width: 620px) {
@@ -504,5 +497,5 @@ button.text-link {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .city canvas, .city-panel, .city-tip { transition: none; }
+  .city canvas, .city-panel, .city-tip, .city-hint { transition: none; }
 }
