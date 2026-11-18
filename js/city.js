@@ -20,37 +20,37 @@ const ADS = [
   { id: "name", kind: "name" },
   { id: "journey", title: "Journey", kicker: "Capstone, 2026", headline: "Every inch counts.",
     sub: "Child growth and nutrition, made clear for parents and doctors.",
-    img: "assets/images/Journey.png", fit: "contain",
+    art: "journey",
     bg: "#0e4d33", dark: "#06281a", light: "#8ff0b4", ink: "#ffffff",
     href: "https://zion.luddy.indiana.edu/info-capstone-2026/journey", external: true,
     blurb: "My Informatics capstone at Indiana University: a platform that helps parents and healthcare providers track a child's growth and nutrition, spot concerning trends early, and get health alerts." },
   { id: "spider", title: "Spider-History", kicker: "Web design", headline: "60 years. One web.",
     sub: "A 12-page archive of Spider-Man's history.",
-    img: "assets/images/swinging_spiderman_cover.webp",
+    art: "spider",
     bg: "#b5121b", dark: "#3d0509", light: "#ffd84a", ink: "#ffffff",
     href: "projects/spiderman.html",
     blurb: "A multi-page site that organizes Spider-Man's history by decade, creators, and villains, built around clear information architecture and consistent navigation." },
   { id: "ots", title: "Fortnite × One Times Square", kicker: "Fly Studio", headline: "2 million views. One ball drop.",
     sub: "A New Year's Eve Fortnite map for Times Square.",
-    img: "assets/images/OTS2.jpg",
+    art: "ots",
     bg: "#1f2bd8", dark: "#0a0d45", light: "#ff5ad6", ink: "#ffffff",
     href: "projects/fortnite.html",
     blurb: "At Fly Studio I designed and launched a custom Fortnite Creative map for a New Year's Eve campaign with One Times Square. It reached 2M+ views on Fortnite's official Instagram." },
   { id: "lego", title: "LEGO Intelligence Agent", kicker: "Dashboard", headline: "Never miss a brick.",
     sub: "Release dates and retiring sets, tracked automatically.",
-    img: "assets/images/lego-intel.jpg",
+    art: "lego",
     bg: "#ffcc00", dark: "#1b1300", light: "#fff3b0", ink: "#1b1300",
     href: "https://brandino101234.github.io/lego-intelligence-agent/", external: true,
     blurb: "A dashboard that tracks upcoming LEGO releases, sets about to retire, gifts with purchase, and the BrickLink Designer Program. Python scrapers run on a schedule and rebuild it automatically." },
   { id: "brandinos", title: "BrandinosBuilds", kicker: "Brand and content design", headline: "Brick by brick.",
     sub: "Thumbnails, channel art, and series formats for a LEGO brand.",
-    img: "assets/images/about/lego.jpg",
+    art: "brandinos",
     bg: "#ff5a1f", dark: "#3a1103", light: "#ffe2c9", ink: "#ffffff",
     href: "about.html",
     blurb: "I founded BrandinosBuilds and design all of its visual content across TikTok, Instagram, and YouTube: thumbnails, channel art, in-video graphics, and recurring series like Brick Blur." },
   { id: "vr", title: "Mindfulness in VR", kicker: "VR, Unity", headline: "Breathe in. Log out.",
     sub: "An immersive meditation experience.",
-    img: "assets/images/VRcover.jpg",
+    art: "vr",
     bg: "#5a2bd6", dark: "#1a0b47", light: "#a6ecff", ink: "#ffffff",
     href: "https://www.youtube.com/watch?v=U2gG0RcOsK4", external: true,
     blurb: "A virtual reality meditation experience built in Unity, with interactive environments and calming visuals designed to help people relax." },
@@ -62,7 +62,7 @@ const ADS = [
     blurb: "An NBA draft analytics app. Every pick since 1996 gets a projection from draft-night data only, then a grade as his career unfolds, with prospect cards for 1,833 players." },
   { id: "robot", title: "Arduino Tank Robot", kicker: "Hardware", headline: "Meet Turny.",
     sub: "A servo-driven tank robot.",
-    img: "assets/images/arduino2.jpg",
+    art: "robot",
     bg: "#c6ff3d", dark: "#14213d", light: "#f4ffd6", ink: "#14213d",
     href: "projects/robot.html",
     blurb: "A small tank robot I built with Arduino and servo motors, with button-triggered movement sequences and a lot of hardware debugging." },
@@ -182,6 +182,308 @@ function drawDraftArt(ctx, x, y, w, h, ad) {
   ctx.restore();
 }
 
+// LEGO Intelligence Agent key visual: a stack of bricks over a release-calendar
+// strip, with one set tagged NEW and one tagged RETIRING.
+function drawLegoArt(ctx, x, y, w, h, ad) {
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(x, y, w, h);
+  ctx.clip();
+  ctx.fillStyle = ad.dark;
+  ctx.fillRect(x, y, w, h);
+
+  // One brick, seen from the front: body, darker base edge, studs on top
+  function brick(bx, by, bw, bh, studs, face, shade) {
+    const studW = bw / studs * 0.56, studH = bh * 0.26;
+    ctx.fillStyle = face;
+    for (let i = 0; i < studs; i++) {
+      const sx = bx + (bw / studs) * (i + 0.5) - studW / 2;
+      ctx.fillRect(sx, by - studH, studW, studH);
+      ctx.fillStyle = shade;
+      ctx.fillRect(sx + studW * 0.72, by - studH, studW * 0.28, studH);
+      ctx.fillStyle = face;
+    }
+    ctx.fillRect(bx, by, bw, bh);
+    ctx.fillStyle = shade;
+    ctx.fillRect(bx, by + bh * 0.82, bw, bh * 0.18);
+    ctx.fillRect(bx + bw * 0.93, by, bw * 0.07, bh);
+  }
+
+  const unit = Math.min(w * 0.17, h * 0.13);
+  const baseY = y + h * 0.62;
+  const left = x + w * 0.5 - unit * 2.6;
+  brick(left, baseY - unit, unit * 4, unit, 4, "#ffcc00", "#c99700");
+  brick(left + unit * 1.2, baseY - unit * 2.3, unit * 3, unit, 3, "#ff5a1f", "#c23f0e");
+  brick(left + unit * 0.4, baseY - unit * 3.6, unit * 2, unit, 2, "#3a8dff", "#1f5fc0");
+
+  // Release-calendar strip
+  const tiles = [["NOV", "1"], ["NOV", "4"], ["JAN", "1"], ["DEC", "31"]];
+  const stripY = y + h * 0.72, gap = w * 0.025;
+  const tileW = (w * 0.86 - gap * (tiles.length - 1)) / tiles.length, tileH = h * 0.2;
+  tiles.forEach(([m, d], i) => {
+    const tx = x + w * 0.07 + i * (tileW + gap);
+    ctx.fillStyle = i === 3 ? "#ff3b3b" : i === 0 ? "#ffcc00" : "rgba(255,243,176,0.14)";
+    ctx.fillRect(tx, stripY, tileW, tileH);
+    ctx.fillStyle = i === 0 ? ad.dark : "#ffffff";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+    ctx.font = `700 ${Math.round(tileH * 0.24)}px "Archivo", sans-serif`;
+    ctx.fillText(m, tx + tileW / 2, stripY + tileH * 0.12);
+    ctx.font = `900 ${Math.round(tileH * 0.5)}px "Big Shoulders Display"`;
+    ctx.fillText(d, tx + tileW / 2, stripY + tileH * 0.4);
+  });
+
+  // Tags above the first and last tiles
+  ctx.font = `800 ${Math.round(h * 0.05)}px "Big Shoulders Display"`;
+  ctx.textAlign = "left";
+  ctx.fillStyle = "#ffcc00";
+  ctx.fillText("NEW", x + w * 0.07, stripY - h * 0.065);
+  ctx.textAlign = "right";
+  ctx.fillStyle = "#ff6b6b";
+  ctx.fillText("RETIRING", x + w * 0.93, stripY - h * 0.065);
+  ctx.textAlign = "left";
+  ctx.restore();
+}
+
+// ---------- Drawn key visuals ----------
+// Shared helpers so every visual uses the same frame, type, and colors.
+function artFrame(ctx, x, y, w, h, ad) {
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(x, y, w, h);
+  ctx.clip();
+  ctx.fillStyle = ad.dark;
+  ctx.fillRect(x, y, w, h);
+}
+function artLabel(ctx, text, tx, ty, size, color, align = "left") {
+  ctx.font = `800 ${Math.round(size)}px "Big Shoulders Display"`;
+  ctx.fillStyle = color;
+  ctx.textAlign = align;
+  ctx.textBaseline = "top";
+  ctx.fillText(text, tx, ty);
+  ctx.textAlign = "left";
+}
+
+// Journey: a growth chart with a height ruler
+function drawJourneyArt(ctx, x, y, w, h, ad) {
+  artFrame(ctx, x, y, w, h, ad);
+  const gx = x + w * 0.2, gy = y + h * 0.12, gw = w * 0.72, gh = h * 0.7;
+  ctx.strokeStyle = "rgba(143,240,180,0.18)";
+  ctx.lineWidth = 2;
+  for (let i = 0; i <= 5; i++) {
+    ctx.beginPath(); ctx.moveTo(gx, gy + (gh / 5) * i); ctx.lineTo(gx + gw, gy + (gh / 5) * i); ctx.stroke();
+  }
+  // Ruler down the left side
+  ctx.fillStyle = "#ffcf5a";
+  ctx.fillRect(x + w * 0.06, gy, w * 0.07, gh);
+  ctx.fillStyle = ad.dark;
+  for (let i = 0; i <= 20; i++) {
+    const ty = gy + (gh / 20) * i, long = i % 5 === 0;
+    ctx.fillRect(x + w * 0.06, ty - 1.5, w * (long ? 0.05 : 0.028), 3);
+  }
+  // Growth curve with check-in dots
+  const pts = [0, 0.18, 0.33, 0.46, 0.57, 0.66, 0.74, 0.8].map((v, i, a) => [gx + (gw / (a.length - 1)) * i, gy + gh - gh * (0.08 + v)]);
+  ctx.strokeStyle = ad.light;
+  ctx.lineWidth = h * 0.022;
+  ctx.lineJoin = ctx.lineCap = "round";
+  ctx.beginPath();
+  pts.forEach(([px, py], i) => (i ? ctx.lineTo(px, py) : ctx.moveTo(px, py)));
+  ctx.stroke();
+  pts.forEach(([px, py], i) => {
+    ctx.fillStyle = i === pts.length - 1 ? "#ffcf5a" : "#ffffff";
+    ctx.beginPath(); ctx.arc(px, py, h * (i === pts.length - 1 ? 0.03 : 0.018), 0, Math.PI * 2); ctx.fill();
+  });
+  artLabel(ctx, "AGE", gx + gw, gy + gh + h * 0.03, h * 0.06, ad.light, "right");
+  ctx.restore();
+}
+
+// Spider-History: a web, with a 1962 to 2026 timeline under it
+function drawSpiderArt(ctx, x, y, w, h, ad) {
+  artFrame(ctx, x, y, w, h, ad);
+  const cx = x + w * 0.5, cy = y + h * 0.42, R = Math.max(w, h) * 0.62;
+  const spokes = 12;
+  ctx.strokeStyle = ad.light;
+  ctx.lineWidth = h * 0.009;
+  for (let i = 0; i < spokes; i++) {
+    const a = (Math.PI * 2 / spokes) * i;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(a) * R, cy + Math.sin(a) * R); ctx.stroke();
+  }
+  for (let r = 1; r <= 7; r++) {
+    const rr = R * 0.11 * r * (1 + r * 0.06);
+    ctx.beginPath();
+    for (let i = 0; i <= spokes; i++) {
+      const a0 = (Math.PI * 2 / spokes) * i, a1 = (Math.PI * 2 / spokes) * (i + 1);
+      const p0 = [cx + Math.cos(a0) * rr, cy + Math.sin(a0) * rr];
+      const p1 = [cx + Math.cos(a1) * rr, cy + Math.sin(a1) * rr];
+      const am = (a0 + a1) / 2, sag = rr * 0.86;
+      if (i === 0) ctx.moveTo(...p0);
+      ctx.quadraticCurveTo(cx + Math.cos(am) * sag, cy + Math.sin(am) * sag, ...p1);
+    }
+    ctx.stroke();
+  }
+  // Timeline band
+  const by = y + h * 0.8;
+  ctx.fillStyle = ad.dark;
+  ctx.fillRect(x, by - h * 0.02, w, h * 0.22);
+  ctx.strokeStyle = ad.light;
+  ctx.lineWidth = h * 0.012;
+  ctx.beginPath(); ctx.moveTo(x + w * 0.08, by + h * 0.06); ctx.lineTo(x + w * 0.92, by + h * 0.06); ctx.stroke();
+  for (let i = 0; i < 7; i++) {
+    const tx = x + w * 0.08 + (w * 0.84 / 6) * i;
+    ctx.fillStyle = "#ffffff";
+    ctx.beginPath(); ctx.arc(tx, by + h * 0.06, h * 0.016, 0, Math.PI * 2); ctx.fill();
+  }
+  artLabel(ctx, "1962", x + w * 0.08, by + h * 0.1, h * 0.065, "#ffffff");
+  artLabel(ctx, "2026", x + w * 0.92, by + h * 0.1, h * 0.065, "#ffffff", "right");
+  ctx.restore();
+}
+
+// Fortnite x One Times Square: the ball on the tower, confetti, 2M+
+function drawOtsArt(ctx, x, y, w, h, ad) {
+  artFrame(ctx, x, y, w, h, ad);
+  // Confetti
+  const colors = [ad.light, "#ffd84a", "#ffffff", "#5ad6ff"];
+  let k = 7;
+  for (let i = 0; i < 70; i++) {
+    k = (k * 9301 + 49297) % 233280;
+    const r1 = k / 233280;
+    k = (k * 9301 + 49297) % 233280;
+    const r2 = k / 233280;
+    ctx.fillStyle = colors[i % colors.length];
+    ctx.save();
+    ctx.translate(x + r1 * w, y + r2 * h * 0.75);
+    ctx.rotate(r1 * 6);
+    ctx.fillRect(0, 0, w * 0.022, h * 0.01);
+    ctx.restore();
+  }
+  // Tower
+  const tw = w * 0.2, tx = x + w * 0.5 - tw / 2, top = y + h * 0.42;
+  ctx.fillStyle = "#121540";
+  ctx.fillRect(tx, top, tw, h);
+  ctx.fillStyle = ad.light;
+  for (let i = 0; i < 3; i++) ctx.fillRect(tx + tw * 0.12, top + h * 0.06 + i * h * 0.14, tw * 0.76, h * 0.1);
+  ctx.fillStyle = "#121540";
+  ctx.fillRect(x + w * 0.5 - w * 0.008, y + h * 0.3, w * 0.016, h * 0.13);
+  // The ball: a faceted circle
+  const bx = x + w * 0.5, by = y + h * 0.25, br = Math.min(w, h) * 0.13;
+  ctx.fillStyle = "#ffffff";
+  ctx.beginPath(); ctx.arc(bx, by, br, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = "#9fd8ff";
+  ctx.lineWidth = br * 0.08;
+  for (let i = 0; i < 6; i++) {
+    const a = (Math.PI / 3) * i;
+    ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + Math.cos(a) * br, by + Math.sin(a) * br); ctx.stroke();
+  }
+  ctx.beginPath(); ctx.arc(bx, by, br * 0.55, 0, Math.PI * 2); ctx.stroke();
+  // 2M+
+  ctx.font = `900 ${Math.round(h * 0.2)}px "Big Shoulders Display"`;
+  ctx.fillStyle = "#ffffff";
+  ctx.textAlign = "left";
+  ctx.textBaseline = "top";
+  ctx.fillText("2M+", x + w * 0.06, y + h * 0.04);
+  artLabel(ctx, "VIEWS", x + w * 0.06, y + h * 0.24, h * 0.055, ad.light);
+  ctx.restore();
+}
+
+// Mindfulness in VR: a headset floating over a calm horizon
+function drawVrArt(ctx, x, y, w, h, ad) {
+  artFrame(ctx, x, y, w, h, ad);
+  // Sun and horizon
+  ctx.fillStyle = "rgba(166,236,255,0.25)";
+  ctx.beginPath(); ctx.arc(x + w * 0.5, y + h * 0.7, w * 0.3, Math.PI, 0); ctx.fill();
+  ctx.strokeStyle = ad.light;
+  ctx.lineWidth = h * 0.01;
+  for (let i = 0; i < 4; i++) {
+    const wy = y + h * (0.72 + i * 0.07), amp = h * 0.012;
+    ctx.globalAlpha = 1 - i * 0.2;
+    ctx.beginPath();
+    for (let px = 0; px <= w; px += w / 40) {
+      const py = wy + Math.sin(px / w * Math.PI * 4 + i) * amp;
+      px ? ctx.lineTo(x + px, py) : ctx.moveTo(x + px, py);
+    }
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+  // Headset
+  const hw = w * 0.62, hh = h * 0.22, hx = x + w * 0.5 - hw / 2, hy = y + h * 0.22;
+  ctx.fillStyle = "#ffffff";
+  ctx.beginPath(); ctx.roundRect(hx, hy, hw, hh, hh * 0.35); ctx.fill();
+  ctx.fillStyle = ad.dark;
+  ctx.beginPath(); ctx.roundRect(hx + hw * 0.08, hy + hh * 0.2, hw * 0.36, hh * 0.6, hh * 0.25); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(hx + hw * 0.56, hy + hh * 0.2, hw * 0.36, hh * 0.6, hh * 0.25); ctx.fill();
+  ctx.fillStyle = ad.light;
+  ctx.fillRect(hx - w * 0.06, hy + hh * 0.38, w * 0.06, hh * 0.24);
+  ctx.fillRect(hx + hw, hy + hh * 0.38, w * 0.06, hh * 0.24);
+  ctx.restore();
+}
+
+// Arduino Tank Robot: Turny, drawn from the side
+function drawRobotArt(ctx, x, y, w, h, ad) {
+  artFrame(ctx, x, y, w, h, ad);
+  const base = y + h * 0.78;
+  // Treads
+  ctx.fillStyle = "#0b1226";
+  ctx.beginPath(); ctx.roundRect(x + w * 0.12, base - h * 0.12, w * 0.76, h * 0.14, h * 0.07); ctx.fill();
+  ctx.fillStyle = ad.light;
+  for (let i = 0; i < 5; i++) {
+    ctx.beginPath(); ctx.arc(x + w * 0.2 + i * w * 0.15, base - h * 0.05, h * 0.035, 0, Math.PI * 2); ctx.fill();
+  }
+  // Body
+  ctx.fillStyle = "#3aa0ff";
+  ctx.fillRect(x + w * 0.18, base - h * 0.36, w * 0.64, h * 0.24);
+  ctx.fillStyle = "#c6ff3d";
+  ctx.fillRect(x + w * 0.18, base - h * 0.4, w * 0.64, h * 0.05);
+  // The ladder arm
+  ctx.save();
+  ctx.translate(x + w * 0.42, base - h * 0.42);
+  ctx.rotate(-0.42);
+  ctx.fillStyle = "#ff8a3d";
+  const aw = w * 0.62, ah = h * 0.09;
+  ctx.fillRect(0, -ah, aw, ah);
+  ctx.fillStyle = ad.dark;
+  for (let i = 1; i < 8; i++) ctx.fillRect((aw / 8) * i, -ah * 0.8, aw * 0.018, ah * 0.6);
+  ctx.restore();
+  // Button
+  ctx.fillStyle = "#ffd84a";
+  ctx.beginPath(); ctx.arc(x + w * 0.7, base - h * 0.42, h * 0.025, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+}
+
+// BrandinosBuilds: a video thumbnail frame with a play button and bricks
+function drawBrandinosArt(ctx, x, y, w, h, ad) {
+  artFrame(ctx, x, y, w, h, ad);
+  const fw = w * 0.84, fh = fw * 9 / 16 > h * 0.7 ? h * 0.7 : fw * 9 / 16;
+  const fx = x + (w - fw) / 2, fy = y + h * 0.12;
+  ctx.fillStyle = "#ffffff";
+  ctx.beginPath(); ctx.roundRect(fx, fy, fw, fh, fh * 0.08); ctx.fill();
+  // Pixel blocks: the Brick Blur look
+  const cell = fh / 6;
+  const palette = ["#ff5a1f", "#ffcc00", "#3a8dff", "#ffe2c9"];
+  for (let r = 0; r < 6; r++) for (let c = 0; c < Math.floor(fw / cell); c++) {
+    if ((r * 7 + c * 3) % 5 === 0) {
+      ctx.fillStyle = palette[(r + c) % palette.length];
+      ctx.fillRect(fx + c * cell + 2, fy + r * cell + 2, cell - 4, cell - 4);
+    }
+  }
+  // Play button
+  ctx.fillStyle = ad.dark;
+  ctx.beginPath(); ctx.arc(fx + fw / 2, fy + fh / 2, fh * 0.2, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = "#ffffff";
+  ctx.beginPath();
+  ctx.moveTo(fx + fw / 2 - fh * 0.06, fy + fh / 2 - fh * 0.1);
+  ctx.lineTo(fx + fw / 2 + fh * 0.11, fy + fh / 2);
+  ctx.lineTo(fx + fw / 2 - fh * 0.06, fy + fh / 2 + fh * 0.1);
+  ctx.closePath();
+  ctx.fill();
+  artLabel(ctx, "TIKTOK  INSTAGRAM  YOUTUBE", x + w / 2, fy + fh + h * 0.05, h * 0.055, ad.light, "center");
+  ctx.restore();
+}
+
+const ART = {
+  draft: drawDraftArt, lego: drawLegoArt, journey: drawJourneyArt, spider: drawSpiderArt,
+  ots: drawOtsArt, vr: drawVrArt, robot: drawRobotArt, brandinos: drawBrandinosArt,
+};
+
 // Break a headline into lines that fit a width at a given font
 function wrap(ctx, text, maxW) {
   const words = text.split(" ");
@@ -257,12 +559,12 @@ async function makeAdTexture(ad, aspect) {
 
   if (landscape) {
     const imgW = Math.round(W * 0.5);
-    if (ad.art === "draft") drawDraftArt(ctx, 0, 0, imgW, H - footerH, ad);
+    if (ART[ad.art]) ART[ad.art](ctx, 0, 0, imgW, H - footerH, ad);
     else drawDuotone(ctx, img, 0, 0, imgW, H - footerH, ad.dark, ad.light, ad.fit, ad.focusY);
     textX = imgW + pad; textY = pad; textW = W - imgW - pad * 2; textH = H - footerH - pad * 2;
   } else {
     const imgH = Math.round(H * 0.5);
-    if (ad.art === "draft") drawDraftArt(ctx, 0, 0, W, imgH, ad);
+    if (ART[ad.art]) ART[ad.art](ctx, 0, 0, W, imgH, ad);
     else drawDuotone(ctx, img, 0, 0, W, imgH, ad.dark, ad.light, ad.fit, ad.focusY);
     textX = pad; textY = imgH + pad * 0.8; textW = W - pad * 2; textH = H - imgH - footerH - pad * 1.6;
   }
@@ -491,12 +793,12 @@ const BOARDS = [
   { ad: "spider",    pos: [0, 36.5, -40.3], rotY: 0, w: 8.6, h: 10.4 },
   { ad: "ots",       pos: [0, 25, -40.3],   rotY: 0, w: 8.6, h: 10.4 },
   { ad: "about",     pos: [-13.6, 27, 0],   rotY: 0.72, w: 11, h: 14.5 },
-  { ad: "brandinos", pos: [-13.6, 19, -18], rotY: 0.72, w: 13, h: 8.6 },
+  { ad: "brandinos", pos: [-9.9, 22, -30], rotY: 0.72, w: 13, h: 8.6 },
   { ad: "draft",     pos: [-13.6, 41, -26], rotY: 0.7, w: 13, h: 8.8 },
   { ad: "lego",      pos: [13.6, 27, 0],    rotY: -0.72, w: 11, h: 14.5 },
-  { ad: "vr",        pos: [13.6, 19.5, -17], rotY: -0.72, w: 8.5, h: 11 },
+  { ad: "vr",        pos: [10.6, 23, -30], rotY: -0.72, w: 8.5, h: 11 },
   { ad: "robot",     pos: [13.6, 41.5, -24],  rotY: -0.7, w: 8.5, h: 10.5 },
-  { ad: "resume",    pos: [13.6, 11, -32], rotY: -0.7, w: 11, h: 5.5 },
+  { ad: "resume",    pos: [10.6, 10.5, -34], rotY: -0.7, w: 11, h: 5.5 },
 ];
 
 const boardMeshes = [];
