@@ -56,8 +56,8 @@ const ADS = [
     blurb: "A virtual reality meditation experience built in Unity, with interactive environments and calming visuals designed to help people relax." },
   { id: "draft", title: "Draft DNA", kicker: "Data app", headline: "Draft night, decoded.",
     sub: "Career projections for 1,833 NBA picks.",
-    img: "assets/images/draft-dna.jpg", fit: "contain",
-    bg: "#0d1530", dark: "#050914", light: "#4aa3ff", ink: "#ffffff",
+    art: "draft",
+    bg: "#0d1530", dark: "#06102a", light: "#4aa3ff", ink: "#ffffff",
     href: "https://draft-dna.streamlit.app", external: true,
     blurb: "An NBA draft analytics app. Every pick since 1996 gets a projection from draft-night data only, then a grade as his career unfolds, with prospect cards for 1,833 players." },
   { id: "robot", title: "Arduino Tank Robot", kicker: "Hardware", headline: "Meet Turny.",
@@ -120,6 +120,66 @@ function drawDuotone(ctx, img, x, y, w, h, dark, light, fit = "cover", focusY = 
   }
   o.putImageData(data, 0, 0);
   ctx.drawImage(off, x, y);
+}
+
+// Draft DNA key visual: a basketball with a projection range bar across it
+// (floor, median, ceiling), the core idea of the app.
+function drawDraftArt(ctx, x, y, w, h, ad) {
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(x, y, w, h);
+  ctx.clip();
+  ctx.fillStyle = ad.dark;
+  ctx.fillRect(x, y, w, h);
+
+  // Basketball
+  const r = Math.min(w, h) * 0.42;
+  const cx = x + w * 0.5, cy = y + h * 0.46;
+  const grad = ctx.createRadialGradient(cx - r * 0.35, cy - r * 0.35, r * 0.1, cx, cy, r);
+  grad.addColorStop(0, "#7cc0ff");
+  grad.addColorStop(1, "#1d4f9e");
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = ad.dark;
+  ctx.lineWidth = r * 0.06;
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx, cy - r); ctx.lineTo(cx, cy + r); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx - r, cy); ctx.lineTo(cx + r, cy); ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx - r * 1.35, cy, r * 1.0, -0.72, 0.72); ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx + r * 1.35, cy, r * 1.0, Math.PI - 0.72, Math.PI + 0.72); ctx.stroke();
+
+  // Projection range bar across the ball
+  const barY = cy + r * 0.62;
+  const x0 = x + w * 0.1, x1 = x + w * 0.9;
+  const lo = x0 + (x1 - x0) * 0.18, hi = x0 + (x1 - x0) * 0.86, mid = x0 + (x1 - x0) * 0.47;
+  ctx.lineCap = "round";
+  ctx.strokeStyle = "rgba(255,255,255,0.25)";
+  ctx.lineWidth = h * 0.018;
+  ctx.beginPath(); ctx.moveTo(x0, barY); ctx.lineTo(x1, barY); ctx.stroke();
+  ctx.strokeStyle = ad.light;
+  ctx.lineWidth = h * 0.05;
+  ctx.beginPath(); ctx.moveTo(lo, barY); ctx.lineTo(hi, barY); ctx.stroke();
+  ctx.fillStyle = "#ffffff";
+  ctx.beginPath(); ctx.arc(mid, barY, h * 0.045, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = ad.dark;
+  ctx.lineWidth = h * 0.012;
+  ctx.stroke();
+
+  // Labels under the bar
+  ctx.fillStyle = "#ffffff";
+  ctx.textBaseline = "top";
+  ctx.font = `800 ${Math.round(h * 0.055)}px "Big Shoulders Display"`;
+  ctx.textAlign = "left";
+  ctx.fillText("FLOOR", lo - h * 0.02, barY + h * 0.05);
+  ctx.textAlign = "right";
+  ctx.fillText("CEILING", hi + h * 0.02, barY + h * 0.05);
+  ctx.textAlign = "center";
+  ctx.fillStyle = ad.light;
+  ctx.fillText("#1 PICK", mid, y + h * 0.05);
+  ctx.textAlign = "left";
+  ctx.restore();
 }
 
 // Break a headline into lines that fit a width at a given font
@@ -187,7 +247,7 @@ async function makeAdTexture(ad, aspect) {
     return new THREE.CanvasTexture(c);
   }
 
-  const img = await loadImage(ad.img);
+  const img = ad.img ? await loadImage(ad.img) : null;
   ctx.fillStyle = ad.bg;
   ctx.fillRect(0, 0, W, H);
 
@@ -197,11 +257,13 @@ async function makeAdTexture(ad, aspect) {
 
   if (landscape) {
     const imgW = Math.round(W * 0.5);
-    drawDuotone(ctx, img, 0, 0, imgW, H - footerH, ad.dark, ad.light, ad.fit, ad.focusY);
+    if (ad.art === "draft") drawDraftArt(ctx, 0, 0, imgW, H - footerH, ad);
+    else drawDuotone(ctx, img, 0, 0, imgW, H - footerH, ad.dark, ad.light, ad.fit, ad.focusY);
     textX = imgW + pad; textY = pad; textW = W - imgW - pad * 2; textH = H - footerH - pad * 2;
   } else {
     const imgH = Math.round(H * 0.5);
-    drawDuotone(ctx, img, 0, 0, W, imgH, ad.dark, ad.light, ad.fit, ad.focusY);
+    if (ad.art === "draft") drawDraftArt(ctx, 0, 0, W, imgH, ad);
+    else drawDuotone(ctx, img, 0, 0, W, imgH, ad.dark, ad.light, ad.fit, ad.focusY);
     textX = pad; textY = imgH + pad * 0.8; textW = W - pad * 2; textH = H - imgH - footerH - pad * 1.6;
   }
 
@@ -267,6 +329,15 @@ const warm = new THREE.DirectionalLight("#ffb27a", 0.6);
 warm.position.set(20, 40, 30);
 scene.add(warm);
 
+// Seeded random numbers, so the city is laid out the same on every visit
+let seed = 24;
+function random() {
+  seed |= 0; seed = (seed + 0x6d2b79f5) | 0;
+  let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+}
+
 // Lit windows texture shared by every building
 function windowsTexture() {
   const c = document.createElement("canvas");
@@ -276,7 +347,7 @@ function windowsTexture() {
   g.fillRect(0, 0, 128, 256);
   for (let y = 4; y < 256; y += 10) {
     for (let x = 4; x < 128; x += 8) {
-      const r = Math.random();
+      const r = random();
       g.fillStyle = r > 0.86 ? "#ffd59a" : r > 0.8 ? "#8ea4ff" : "#05040c";
       g.fillRect(x, y, 4, 5);
     }
@@ -291,7 +362,7 @@ const winTex = windowsTexture();
 const buildingColors = ["#1c1a3f", "#221f4a", "#191734", "#272350", "#1e2446"];
 function building(x, z, w, d, h, color) {
   const mat = new THREE.MeshLambertMaterial({
-    color: color || buildingColors[Math.floor(Math.random() * buildingColors.length)],
+    color: color || buildingColors[Math.floor(random() * buildingColors.length)],
     emissive: "#ffffff",
     emissiveMap: winTex.clone(),
     emissiveIntensity: 0.32,
@@ -334,12 +405,13 @@ for (let i = 0; i < 6; i++) {
 scene.add(steps);
 
 // Side buildings, both sides of the square
-const rng = (a, b) => a + Math.random() * (b - a);
+const rng = (a, b) => a + random() * (b - a);
 for (const side of [-1, 1]) {
   let z = 34;
   while (z > -120) {
     const d = rng(10, 16);
-    building(side * rng(23, 27), z - d / 2, rng(12, 16), d, rng(28, 70));
+    // Inner faces stay at least 18 units from the street so billboards sit in front
+    building(side * rng(25, 28), z - d / 2, rng(10, 14), d, rng(28, 70));
     z -= d + 0.5;
   }
   // a second, taller row behind
@@ -419,11 +491,11 @@ const BOARDS = [
   { ad: "spider",    pos: [0, 36.5, -40.3], rotY: 0, w: 8.6, h: 10.4 },
   { ad: "ots",       pos: [0, 25, -40.3],   rotY: 0, w: 8.6, h: 10.4 },
   { ad: "about",     pos: [-13.6, 27, 0],   rotY: 0.72, w: 11, h: 14.5 },
-  { ad: "lego",      pos: [-13.6, 19, -18], rotY: 0.72, w: 13, h: 8.6 },
-  { ad: "draft",     pos: [-13.6, 36, -26], rotY: 0.7, w: 13, h: 8.8 },
-  { ad: "brandinos", pos: [13.6, 27, 0],    rotY: -0.72, w: 11, h: 14.5 },
+  { ad: "brandinos", pos: [-13.6, 19, -18], rotY: 0.72, w: 13, h: 8.6 },
+  { ad: "draft",     pos: [-13.6, 41, -26], rotY: 0.7, w: 13, h: 8.8 },
+  { ad: "lego",      pos: [13.6, 27, 0],    rotY: -0.72, w: 11, h: 14.5 },
   { ad: "vr",        pos: [13.6, 19.5, -17], rotY: -0.72, w: 8.5, h: 11 },
-  { ad: "robot",     pos: [13.6, 36, -24],  rotY: -0.7, w: 8.5, h: 10.5 },
+  { ad: "robot",     pos: [13.6, 41.5, -24],  rotY: -0.7, w: 8.5, h: 10.5 },
   { ad: "resume",    pos: [13.6, 11, -32], rotY: -0.7, w: 11, h: 5.5 },
 ];
 
