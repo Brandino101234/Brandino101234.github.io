@@ -19,7 +19,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&display=swap" />
-  <link rel="stylesheet" href="./css/style.css?v=mta3" />
+  <link rel="stylesheet" href="./css/style.css?v=mta6" />
 </head>
 <body class="home">
 
@@ -51,6 +51,8 @@
         </ul>
       </div>
       <span class="city-tip" aria-hidden="true"></span>
+      <button class="city-step up" type="button" hidden><span class="chev" aria-hidden="true">▲</span><span class="label"></span></button>
+      <button class="city-step down" type="button" hidden><span class="chev" aria-hidden="true">▼</span><span class="label"></span></button>
       <aside class="city-panel" hidden aria-live="polite">
         <span class="kicker"></span>
         <h2></h2>
@@ -150,7 +152,7 @@
       }
     }
   </script>
-  <script type="module" src="js/city.js?v=32"></script>
+  <script type="module" src="js/city.js?v=38"></script>
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>

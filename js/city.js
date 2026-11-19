@@ -70,13 +70,16 @@ const ADS = [
     blurb: "A small tank robot I built with Arduino and servo motors, with button-triggered movement sequences and a lot of hardware debugging." },
   { id: "about", title: "About me", kicker: "Indiana University, 2026", headline: "Hi, I'm Brendan",
     sub: "Designer. LEGO builder. IRONMAN 70.3 finisher.",
-    img: "assets/images/about/sample-gates.jpg", focusY: 0.3,
+    img: "assets/images/about/nasdaq.jpg", focusY: 0.35,
     bg: "#14213d", dark: "#0a1122", light: "#cfdcff", ink: "#ffffff",
     href: "about.html",
     blurb: "I'm a designer and Informatics graduate from Indiana University, with minors in Business and Financial Literacy from the Kelley School. Outside of work: LEGO, triathlons, and basketball." },
   { id: "resume", kind: "led", title: "Resume", kicker: "PDF, one page", headline: "Now hiring?", sub: "Read the resume",
     href: "assets/resume/brendan-nussenblatt-resume.pdf", external: true,
     blurb: "My one-page resume, as a PDF." },
+  { id: "station", kind: "station", title: "Contact", kicker: "Times Sq-42 St", headline: "", sub: "",
+    href: "mailto:brendannussenblatt@gmail.com",
+    blurb: "Take the 1 train to my inbox: brendannussenblatt@gmail.com. I'm happy to walk through any of these projects." },
 ];
 const AD = Object.fromEntries(ADS.map((a) => [a.id, a]));
 
@@ -551,6 +554,31 @@ async function makeAdTexture(ad, aspect) {
     return new THREE.CanvasTexture(c);
   }
 
+  if (ad.kind === "station") {
+    // Station sign: black panel, white rule, red 1 bullet, station name
+    ctx.fillStyle = "#111111";
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, H * 0.1, W, H * 0.035);
+    const r = H * 0.27;
+    ctx.fillStyle = "#ee352e";
+    ctx.beginPath(); ctx.arc(pad + r, H * 0.58, r, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#ffffff";
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.font = `700 ${Math.round(r * 1.3)}px "Helvetica Neue", Helvetica, Arimo, Arial`;
+    ctx.fillText("1", pad + r, H * 0.6);
+    ctx.textAlign = "left";
+    let fs = H * 0.42;
+    const tx = pad * 2 + r * 2;
+    ctx.font = `700 ${Math.round(fs)}px "Helvetica Neue", Helvetica, Arimo, Arial`;
+    while (ctx.measureText("Times Sq-42 St").width > W - tx - pad && fs > 20) {
+      fs -= 4;
+      ctx.font = `700 ${Math.round(fs)}px "Helvetica Neue", Helvetica, Arimo, Arial`;
+    }
+    ctx.fillText("Times Sq-42 St", tx, H * 0.6);
+    return new THREE.CanvasTexture(c);
+  }
+
   if (ad.kind === "led") {
     ctx.fillStyle = "#050505";
     ctx.fillRect(0, 0, W, H);
@@ -894,6 +922,33 @@ tower.add(ball);
 tower.position.set(0, 0, -45);
 scene.add(tower);
 
+// Subway entrance at the foot of One Times Square: two lamp posts topped with
+// the green globes that mark an open NYC subway entrance, stair railings, and
+// the station sign hung between the posts. The sign itself is a billboard (see
+// BOARDS) so it can be clicked.
+const entrance = new THREE.Group();
+const railMat = new THREE.MeshLambertMaterial({ color: "#1f3a2a" });
+const globeMat = new THREE.MeshStandardMaterial({ color: "#7dff9a", emissive: "#2fe06a", emissiveIntensity: 1.6, roughness: 0.4 });
+for (const side of [-1, 1]) {
+  const post = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.3, 9.6, 10), railMat);
+  post.position.set(side * 5.4, 4.8, 0);
+  const globe = new THREE.Mesh(new THREE.SphereGeometry(0.75, 20, 14), globeMat);
+  globe.position.set(side * 5.4, 10.3, 0);
+  const rail = new THREE.Mesh(new THREE.BoxGeometry(0.3, 1.2, 7), railMat);
+  rail.position.set(side * 4.2, 0.6, 3.5);
+  entrance.add(post, globe, rail);
+}
+// Crossbar the sign hangs from
+const bar = new THREE.Mesh(new THREE.BoxGeometry(11, 0.35, 0.35), railMat);
+bar.position.set(0, 9.6, 0);
+entrance.add(bar);
+const stairs = new THREE.Mesh(new THREE.PlaneGeometry(8, 7), new THREE.MeshBasicMaterial({ color: "#050409" }));
+stairs.rotation.x = -Math.PI / 2;
+stairs.position.set(0, 0.05, 3.5);
+entrance.add(stairs);
+entrance.position.set(0, 0, -35);
+scene.add(entrance);
+
 // The zipper: an LED ticker band around the tower
 function zipperTexture() {
   const c = document.createElement("canvas");
@@ -950,6 +1005,7 @@ const BOARDS = [
   { ad: "vr",        pos: [10.6, 28, -30], rotY: -0.72, w: 8.5, h: 11 },
   { ad: "robot",     pos: [13.6, 46.5, -24],  rotY: -0.7, w: 8.5, h: 10.5 },
   { ad: "resume",    pos: [10.6, 15.5, -34], rotY: -0.7, w: 11, h: 5.5 },
+  { ad: "station",   pos: [0, 8, -34.6],    rotY: 0, w: 9.6, h: 2.6 },
 ];
 
 const boardMeshes = [];
@@ -1046,6 +1102,8 @@ function flyTo(pos, target, ms = 1100) {
 function focusBoard(mesh) {
   const { ad, group, board } = mesh.userData;
   focused = mesh;
+  neighbors = towerNeighbors(mesh);
+  hideSteps();
   setHover(null);
   controls.enabled = false;
   const normal = new THREE.Vector3(0, 0, 1).applyQuaternion(group.quaternion);
@@ -1066,15 +1124,73 @@ function focusBoard(mesh) {
   panel.querySelector("p").textContent = ad.blurb;
   const link = panel.querySelector(".open");
   link.href = ad.href;
-  link.textContent = ad.id === "resume" ? "Open the resume" : ad.id === "about" ? "Read about me" : "Open the project";
+  link.textContent = ad.id === "resume" ? "Open the resume" : ad.id === "about" ? "Read about me" : ad.id === "station" ? "Send an email" : "Open the project";
   if (ad.external) { link.target = "_blank"; link.rel = "noopener"; } else { link.removeAttribute("target"); link.removeAttribute("rel"); }
   panel.hidden = false;
   requestAnimationFrame(() => panel.classList.add("is-open"));
   link.focus({ preventScroll: true });
 }
 
+// ---------- Stepping between One Times Square screens ----------
+// When zoomed into a tower screen, arrows above and below it name the
+// neighboring screens and fly to them (arrow keys work too).
+const stepUp = document.querySelector(".city-step.up");
+const stepDown = document.querySelector(".city-step.down");
+let neighbors = [null, null];
+
+function towerNeighbors(mesh) {
+  const onTower = (m) => m.userData.board.pos[0] === 0 && m.userData.ad.kind !== "station";
+  if (!onTower(mesh)) return [null, null];
+  const tower = boardMeshes
+    .filter(onTower)
+    .sort((a, b) => b.userData.board.pos[1] - a.userData.board.pos[1]);
+  const i = tower.indexOf(mesh);
+  return [tower[i - 1] || null, tower[i + 1] || null];
+}
+
+function hideSteps() {
+  stepUp.hidden = true;
+  stepDown.hidden = true;
+}
+
+// Put the arrows just above and below the focused screen, once the camera stops
+function placeSteps() {
+  hideSteps();
+  if (!focused) return;
+  const { group, board } = focused.userData;
+  const toPx = (v) => {
+    const p = v.clone().project(camera);
+    return [(p.x + 1) / 2 * mount.clientWidth, (1 - p.y) / 2 * mount.clientHeight];
+  };
+  const up = new THREE.Vector3(0, board.h / 2 + 0.6, 0);
+  const [tx, ty] = toPx(group.position.clone().add(up));
+  const [bx, by] = toPx(group.position.clone().sub(up));
+  const [above, below] = neighbors;
+  if (above) {
+    stepUp.querySelector(".label").textContent = above.userData.ad.title;
+    stepUp.style.left = tx + "px";
+    stepUp.style.top = Math.max(ty, 64) + "px";
+    stepUp.hidden = false;
+  }
+  if (below) {
+    stepDown.querySelector(".label").textContent = below.userData.ad.title;
+    stepDown.style.left = bx + "px";
+    stepDown.style.top = Math.min(by, mount.clientHeight - 56) + "px";
+    stepDown.hidden = false;
+  }
+}
+
+stepUp.addEventListener("click", () => neighbors[0] && focusBoard(neighbors[0]));
+stepDown.addEventListener("click", () => neighbors[1] && focusBoard(neighbors[1]));
+window.addEventListener("keydown", (e) => {
+  if (!focused) return;
+  if (e.key === "ArrowUp" && neighbors[0]) { e.preventDefault(); focusBoard(neighbors[0]); }
+  if (e.key === "ArrowDown" && neighbors[1]) { e.preventDefault(); focusBoard(neighbors[1]); }
+});
+
 function backToSquare() {
   if (!focused) return;
+  hideSteps();
   focused = null;
   mount.classList.remove("is-focused");
   panel.classList.remove("is-open");
@@ -1100,6 +1216,7 @@ function resize() {
   // Narrow screens: step back so the tower and both sides still fit
   camera.fov = w / h < 0.9 ? 68 : 50;
   camera.updateProjectionMatrix();
+  if (focused && !tween) placeSteps();
 }
 new ResizeObserver(resize).observe(mount);
 resize();
@@ -1122,6 +1239,7 @@ function frame() {
     if (k === 1) {
       tween = null;
       if (!focused) controls.enabled = true;
+      else placeSteps();
     }
   } else if (controls.enabled) {
     controls.update();
