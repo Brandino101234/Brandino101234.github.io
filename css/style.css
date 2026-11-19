@@ -775,3 +775,51 @@ button.text-link {
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
+
+/* ==========================================================
+   Contact as subway direction signs
+   ========================================================== */
+
+.direction-signs {
+  display: grid;
+  background: linear-gradient(#000 0 9px, #fff 9px 11px, #000 11px) top / 100% 11px no-repeat, #000;
+  border-radius: 2px;
+  padding-top: 11px;
+}
+
+.direction {
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 12rem) minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  padding: 18px 22px;
+  color: #fff;
+  text-decoration: none;
+  border-top: 1px solid #2a2a2a;
+}
+.direction:first-child { border-top: 0; }
+
+.dir-arrow {
+  display: grid;
+  place-items: center;
+  width: 2.3rem;
+  height: 2.3rem;
+  border-radius: 50%;
+  background: #fff;
+  color: #000;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.dir-label { font-family: var(--display); font-weight: 700; font-size: clamp(1.4rem, 2.6vw, 2rem); letter-spacing: -0.02em; }
+.dir-detail { font-size: 1rem; color: #bdbdbd; overflow-wrap: anywhere; }
+
+.direction:hover .dir-label,
+.direction:focus-visible .dir-label { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.18em; }
+.direction:hover .dir-arrow { background: #d2d2d2; }
+
+.dir-note { margin-top: 18px; color: var(--muted); font-size: 0.95rem; }
+
+@media (max-width: 620px) {
+  .direction { grid-template-columns: 2.6rem minmax(0, 1fr); padding: 16px; row-gap: 2px; }
+  .dir-detail { grid-column: 2; font-size: 0.9rem; }
+}
