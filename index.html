@@ -18,8 +18,8 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%230f0c24'/><text x='50%' y='56%' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-weight='800' font-size='30' fill='%23ffffff'>BN</text></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800;900&display=swap" />
-  <link rel="stylesheet" href="./css/style.css?v=subway4" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="./css/style.css?v=mta3" />
 </head>
 <body class="home">
 
@@ -43,6 +43,12 @@
       <div class="city-overlay">
         <h1>Brendan Nussenblatt</h1>
         <p>Designer, New York. Drag to look around, then click a billboard.</p>
+        <ul class="routes" aria-label="Kinds of work">
+          <li style="background:#0039a6" title="UI/UX design">A</li>
+          <li style="background:#ee352e" title="Web">1</li>
+          <li style="background:#ff6319" title="Brand and content">B</li>
+          <li style="background:#b933ad" title="Data">7</li>
+        </ul>
       </div>
       <span class="city-tip" aria-hidden="true"></span>
       <aside class="city-panel" hidden aria-live="polite">
@@ -77,14 +83,14 @@
       <section class="section" id="projects">
         <h2>Projects</h2>
         <ol class="playbill">
-          <li><a href="https://zion.luddy.indiana.edu/info-capstone-2026/journey" target="_blank" rel="noopener" style="--dot:#0e9f5b"><strong>Journey</strong><span>Capstone. Child growth and nutrition tracking for parents and healthcare providers.</span></a></li>
-          <li><a href="projects/spiderman.html" style="--dot:#d6262f"><strong>Spider-History</strong><span>Web design. A 12-page Spider-Man archive organized by decade, creators, and villains.</span></a></li>
-          <li><a href="about.html" style="--dot:#ff6319"><strong>BrandinosBuilds</strong><span>Brand and content design. Thumbnails, channel art, and series formats for a LEGO brand on TikTok, Instagram, and YouTube.</span></a></li>
-          <li><a href="https://brandino101234.github.io/lego-intelligence-agent/" target="_blank" rel="noopener" style="--dot:#fccc0a;--dot-ink:#1b1300"><strong>LEGO Intelligence Agent</strong><span>Dashboard. Tracks LEGO releases and retiring sets, rebuilt automatically by Python scrapers.</span></a></li>
-          <li><a href="projects/fortnite.html" style="--dot:#2850ad"><strong>Fortnite × One Times Square</strong><span>Fly Studio. A New Year's Eve Fortnite Creative map that reached 2M+ views.</span></a></li>
-          <li><a href="https://www.youtube.com/watch?v=U2gG0RcOsK4" target="_blank" rel="noopener" style="--dot:#7b3fd6"><strong>Mindfulness in VR</strong><span>Unity. An immersive meditation experience.</span></a></li>
-          <li><a href="https://draft-dna.streamlit.app" target="_blank" rel="noopener" style="--dot:#4aa3ff;--dot-ink:#06102a"><strong>Draft DNA</strong><span>Data app. NBA draft analytics with prospect cards for 1,833 picks.</span></a></li>
-          <li><a href="projects/robot.html" style="--dot:#6cbe45;--dot-ink:#14213d"><strong>Arduino Tank Robot</strong><span>Hardware. A servo-driven tank robot with custom control logic.</span></a></li>
+          <li><a href="https://zion.luddy.indiana.edu/info-capstone-2026/journey" target="_blank" rel="noopener" style="--dot:#00933c;--dot-ink:#fff"><strong data-line="4">Journey</strong><span>Capstone. Child growth and nutrition tracking for parents and healthcare providers.</span></a></li>
+          <li><a href="projects/spiderman.html" style="--dot:#ee352e;--dot-ink:#fff"><strong data-line="1">Spider-History</strong><span>Web design. A 12-page Spider-Man archive organized by decade, creators, and villains.</span></a></li>
+          <li><a href="about.html" style="--dot:#ff6319;--dot-ink:#fff"><strong data-line="B">BrandinosBuilds</strong><span>Brand and content design. Thumbnails, channel art, and series formats for a LEGO brand on TikTok, Instagram, and YouTube.</span></a></li>
+          <li><a href="https://brandino101234.github.io/lego-intelligence-agent/" target="_blank" rel="noopener" style="--dot:#ee352e;--dot-ink:#fff"><strong data-line="2">LEGO Intelligence Agent</strong><span>Dashboard. Tracks LEGO releases and retiring sets, rebuilt automatically by Python scrapers.</span></a></li>
+          <li><a href="projects/fortnite.html" style="--dot:#0039a6;--dot-ink:#fff"><strong data-line="A">Fortnite × One Times Square</strong><span>Fly Studio. A New Year's Eve Fortnite Creative map that reached 2M+ views.</span></a></li>
+          <li><a href="https://www.youtube.com/watch?v=U2gG0RcOsK4" target="_blank" rel="noopener" style="--dot:#b933ad;--dot-ink:#fff"><strong data-line="7">Mindfulness in VR</strong><span>Unity. An immersive meditation experience.</span></a></li>
+          <li><a href="https://draft-dna.streamlit.app" target="_blank" rel="noopener" style="--dot:#0039a6;--dot-ink:#fff"><strong data-line="C">Draft DNA</strong><span>Data app. NBA draft analytics with prospect cards for 1,833 picks.</span></a></li>
+          <li><a href="projects/robot.html" style="--dot:#6cbe45;--dot-ink:#fff"><strong data-line="G">Arduino Tank Robot</strong><span>Hardware. A servo-driven tank robot with custom control logic.</span></a></li>
         </ol>
       </section>
 
@@ -144,7 +150,7 @@
       }
     }
   </script>
-  <script type="module" src="js/city.js?v=30"></script>
+  <script type="module" src="js/city.js?v=32"></script>
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>

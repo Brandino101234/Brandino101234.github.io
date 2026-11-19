@@ -13,10 +13,10 @@
   --link: #ffffff;
   --link-hover: #c9d4ff;
 
-  --display: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
-  --body: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
-  --sign: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
-  --led: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --display: "Helvetica Neue", Helvetica, Arimo, Arial, sans-serif;
+  --body: "Helvetica Neue", Helvetica, Arimo, Arial, sans-serif;
+  --sign: "Helvetica Neue", Helvetica, Arimo, Arial, sans-serif;
+  --led: "Helvetica Neue", Helvetica, Arimo, Arial, sans-serif;
 
   --max: 1240px;
   --gutter: clamp(16px, 4vw, 40px);
@@ -62,7 +62,11 @@ p { margin: 0 0 1em; max-width: 68ch; }
 
 /* ---------- Header ---------- */
 
-.site-header { border-bottom: 1px solid var(--rule); background: rgba(15, 12, 36, 0.85); backdrop-filter: blur(8px); position: sticky; top: 0; z-index: 20; }
+/* Subway sign band: black panel, thin white rule across the top */
+.site-header {
+  position: sticky; top: 0; z-index: 20;
+  background: linear-gradient(#111 0 5px, #fff 5px 7px, #111 7px);
+}
 
 .header-inner {
   display: flex;
@@ -75,13 +79,13 @@ p { margin: 0 0 1em; max-width: 68ch; }
   font-size: 0.95rem;
 }
 
-.logo { color: var(--ink); font-weight: 700; text-decoration: none; }
+.logo { color: #fff; font-weight: 700; font-size: 1.05rem; letter-spacing: -0.01em; text-decoration: none; }
 .logo:hover { color: var(--ink); }
 
 .nav { display: flex; gap: 22px; flex-wrap: wrap; justify-content: flex-end; }
-.nav a { color: var(--text); text-decoration: none; }
-.nav a:hover { color: #ffffff; text-decoration: underline; }
-.nav a[aria-current="page"] { color: var(--ink); font-weight: 700; }
+.nav a { color: #fff; font-weight: 700; letter-spacing: -0.01em; text-decoration: none; }
+.nav a:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.3em; }
+.nav a[aria-current="page"] { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.3em; }
 
 /* ---------- Hero: full-width photo, then name beside the intro ---------- */
 
@@ -484,7 +488,7 @@ button.text-link {
 }
 .playbill strong { display: flex; align-items: center; gap: 12px; font-family: var(--display); font-weight: 700; font-size: 1.25rem; letter-spacing: -0.01em; color: var(--ink); line-height: 1.2; }
 .playbill strong::before {
-  counter-increment: show; content: counter(show);
+  content: "";
   display: inline-grid; place-items: center; flex: none;
   width: 1.9rem; height: 1.9rem; border-radius: 50%;
   background: var(--dot, #fff); color: var(--dot-ink, #fff);
@@ -513,3 +517,68 @@ button.text-link {
 @media (prefers-reduced-motion: reduce) {
   .city canvas, .city-panel, .city-tip { transition: none; }
 }
+
+/* ==========================================================
+   Subway signage
+   ========================================================== */
+
+/* Header text sits below the white rule */
+.header-inner { padding-top: 22px; padding-bottom: 16px; }
+
+/* Section headings are station signs */
+.section { border-top: 0; }
+.section > h2,
+.intro h2 {
+  display: block;
+  margin-left: 0;
+  padding: 22px 22px 14px;
+  background: linear-gradient(#111 0 8px, #fff 8px 10px, #111 10px);
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  border-radius: 2px;
+}
+.section > h2 { font-size: clamp(1.6rem, 3vw, 2.3rem); }
+.intro h2 { font-size: clamp(1.8rem, 3.4vw, 2.6rem); align-self: start; }
+
+/* Your name over the 3D scene: a station sign with route bullets */
+.city-overlay {
+  text-shadow: none;
+  padding: 24px 24px 18px;
+  background: linear-gradient(#111 0 9px, #fff 9px 11px, #111 11px);
+  border-radius: 2px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+.city-overlay h1 { font-weight: 700; letter-spacing: -0.02em; }
+.city-overlay p { color: #d6d6d6; font-size: 0.95rem; }
+.routes { display: flex; gap: 6px; margin: 12px 0 0; padding: 0; list-style: none; }
+.routes li {
+  display: grid; place-items: center;
+  width: 1.75rem; height: 1.75rem; border-radius: 50%;
+  font-size: 0.95rem; font-weight: 700; color: #fff;
+}
+
+/* Hover tag, panel, and hint read like small signs too */
+.city-tip { background: #111; color: #fff; border-radius: 2px; border-top: 2px solid #fff; }
+.city-panel { background: #111; border: 0; border-radius: 2px; box-shadow: inset 0 9px 0 #111, inset 0 11px 0 #fff; padding-top: 34px; }
+
+/* Experience: company in bold, dates like a timetable */
+.jobs .when { font-variant-numeric: tabular-nums; }
+
+/* Footer band */
+.site-footer { background: linear-gradient(#111 0 5px, #fff 5px 7px, #111 7px); border-top: 0; color: #d6d6d6; padding-top: 26px; }
+
+@media (max-width: 640px) {
+  .logo { font-size: 0.95rem; white-space: nowrap; }
+  .nav { gap: 12px; flex-wrap: nowrap; }
+  .nav a { font-size: 0.9rem; }
+  .header-inner { align-items: center; }
+  .city-overlay { left: var(--gutter); right: var(--gutter); max-width: none; padding: 20px 16px 14px; }
+  .city-overlay h1 { font-size: 1.7rem; white-space: normal; }
+  .city-overlay p { font-size: 0.85rem; }
+  .section > h2, .intro h2 { padding: 20px 14px 12px; }
+}
+
+/* Each project's bullet is a real subway line (set with data-line) */
+.playbill strong[data-line]::before { content: attr(data-line); }

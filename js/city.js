@@ -183,7 +183,7 @@ function drawDraftArt(ctx, x, y, w, h, ad) {
   // Labels under the bar
   ctx.fillStyle = "#ffffff";
   ctx.textBaseline = "top";
-  ctx.font = `800 ${Math.round(h * 0.055)}px "Schibsted Grotesk"`;
+  ctx.font = `800 ${Math.round(h * 0.055)}px "Helvetica Neue", Helvetica, Arimo, Arial`;
   ctx.textAlign = "left";
   ctx.fillText("FLOOR", lo - h * 0.02, barY + h * 0.05);
   ctx.textAlign = "right";
@@ -240,14 +240,14 @@ function drawLegoArt(ctx, x, y, w, h, ad) {
     ctx.fillStyle = i === 0 ? ad.dark : "#ffffff";
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
-    ctx.font = `700 ${Math.round(tileH * 0.24)}px "Schibsted Grotesk"`;
+    ctx.font = `700 ${Math.round(tileH * 0.24)}px "Helvetica Neue", Helvetica, Arimo, Arial`;
     ctx.fillText(m, tx + tileW / 2, stripY + tileH * 0.12);
-    ctx.font = `900 ${Math.round(tileH * 0.5)}px "Schibsted Grotesk"`;
+    ctx.font = `900 ${Math.round(tileH * 0.5)}px "Helvetica Neue", Helvetica, Arimo, Arial`;
     ctx.fillText(d, tx + tileW / 2, stripY + tileH * 0.4);
   });
 
   // Tags above the first and last tiles
-  ctx.font = `800 ${Math.round(h * 0.05)}px "Schibsted Grotesk"`;
+  ctx.font = `800 ${Math.round(h * 0.05)}px "Helvetica Neue", Helvetica, Arimo, Arial`;
   ctx.textAlign = "left";
   ctx.fillStyle = "#ffcc00";
   ctx.fillText("NEW", x + w * 0.07, stripY - h * 0.065);
@@ -269,7 +269,7 @@ function artFrame(ctx, x, y, w, h, ad) {
   ctx.fillRect(x, y, w, h);
 }
 function artLabel(ctx, text, tx, ty, size, color, align = "left") {
-  ctx.font = `800 ${Math.round(size)}px "Schibsted Grotesk"`;
+  ctx.font = `800 ${Math.round(size)}px "Helvetica Neue", Helvetica, Arimo, Arial`;
   ctx.fillStyle = color;
   ctx.textAlign = align;
   ctx.textBaseline = "top";
@@ -389,7 +389,7 @@ function drawOtsArt(ctx, x, y, w, h, ad) {
   }
   ctx.beginPath(); ctx.arc(bx, by, br * 0.55, 0, Math.PI * 2); ctx.stroke();
   // 2M+
-  ctx.font = `900 ${Math.round(h * 0.2)}px "Schibsted Grotesk"`;
+  ctx.font = `900 ${Math.round(h * 0.2)}px "Helvetica Neue", Helvetica, Arimo, Arial`;
   ctx.fillStyle = "#ffffff";
   ctx.textAlign = "left";
   ctx.textBaseline = "top";
@@ -489,10 +489,10 @@ function drawBrandinosArt(ctx, x, y, w, h, ad) {
   ctx.closePath();
   ctx.fill();
   let ls = h * 0.055;
-  ctx.font = `700 ${Math.round(ls)}px "Schibsted Grotesk"`;
+  ctx.font = `700 ${Math.round(ls)}px "Helvetica Neue", Helvetica, Arimo, Arial`;
   while (ctx.measureText("TikTok   Instagram   YouTube").width > fw && ls > 8) {
     ls -= 1;
-    ctx.font = `700 ${Math.round(ls)}px "Schibsted Grotesk"`;
+    ctx.font = `700 ${Math.round(ls)}px "Helvetica Neue", Helvetica, Arimo, Arial`;
   }
   artLabel(ctx, "TikTok   Instagram   YouTube", x + w / 2, fy + fh + h * 0.05, ls, ad.light, "center");
   ctx.restore();
@@ -521,7 +521,7 @@ function fitHeadline(ctx, text, maxW, maxH, startSize) {
   let size = startSize;
   let lines;
   do {
-    ctx.font = `700 ${size}px "Schibsted Grotesk"`;
+    ctx.font = `700 ${size}px "Helvetica Neue", Helvetica, Arimo, Arial`;
     lines = wrap(ctx, text, maxW);
     const widest = Math.max(...lines.map((l) => ctx.measureText(l).width));
     if (lines.length * size * 0.92 <= maxH && widest <= maxW) break;
@@ -545,7 +545,7 @@ async function makeAdTexture(ad, aspect) {
     const { size, lines } = fitHeadline(ctx, "Brendan Nussenblatt", W - pad * 2, H * 0.6, 260);
     ctx.textBaseline = "top";
     lines.forEach((l, i) => ctx.fillText(l, pad, pad * 1.4 + i * size * 0.92));
-    ctx.font = `900 ${Math.round(H * 0.07)}px "Schibsted Grotesk"`;
+    ctx.font = `900 ${Math.round(H * 0.07)}px "Helvetica Neue", Helvetica, Arimo, Arial`;
     ctx.fillStyle = "#bcd0ff";
     ctx.fillText("Designer, New York", pad, H - pad - H * 0.08);
     return new THREE.CanvasTexture(c);
@@ -560,10 +560,10 @@ async function makeAdTexture(ad, aspect) {
     ctx.shadowColor = "rgba(255,90,74,0.8)";
     ctx.shadowBlur = 24;
     ctx.textBaseline = "top";
-    ctx.font = `900 ${Math.round(H * 0.11)}px "Schibsted Grotesk"`;
+    ctx.font = `900 ${Math.round(H * 0.11)}px "Helvetica Neue", Helvetica, Arimo, Arial`;
     ctx.fillText(ad.headline, pad, H * 0.28);
     const big = fitHeadline(ctx, ad.sub, W - pad * 2, H * 0.4, 220);
-    ctx.font = `900 ${big.size}px "Schibsted Grotesk"`;
+    ctx.font = `900 ${big.size}px "Helvetica Neue", Helvetica, Arimo, Arial`;
     big.lines.forEach((l, i) => ctx.fillText(l, pad, H * 0.45 + i * big.size));
     return new THREE.CanvasTexture(c);
   }
@@ -596,7 +596,7 @@ async function makeAdTexture(ad, aspect) {
   const subSize = Math.round(Math.min(W, H) * 0.045);
   const head = fitHeadline(ctx, ad.headline, textW, textH - subSize * 3.2, landscape ? 200 : 170);
   head.lines.forEach((l, i) => ctx.fillText(l, textX, textY + i * head.size * 0.92));
-  ctx.font = `600 ${subSize}px "Schibsted Grotesk"`;
+  ctx.font = `600 ${subSize}px "Helvetica Neue", Helvetica, Arimo, Arial`;
   ctx.globalAlpha = 0.9;
   const subLines = wrap(ctx, ad.sub, textW);
   const subY = textY + head.lines.length * head.size * 0.92 + subSize * 0.8;
@@ -607,7 +607,7 @@ async function makeAdTexture(ad, aspect) {
   ctx.fillStyle = ad.dark;
   ctx.fillRect(0, H - footerH, W, footerH);
   ctx.fillStyle = ad.light;
-  ctx.font = `800 ${Math.round(footerH * 0.5)}px "Schibsted Grotesk"`;
+  ctx.font = `800 ${Math.round(footerH * 0.5)}px "Helvetica Neue", Helvetica, Arimo, Arial`;
   ctx.textBaseline = "middle";
   ctx.fillText(ad.title, pad, H - footerH / 2);
   ctx.textAlign = "right";
@@ -901,7 +901,7 @@ function zipperTexture() {
   const g = c.getContext("2d");
   g.fillStyle = "#050505";
   g.fillRect(0, 0, c.width, c.height);
-  g.font = '900 60px "Schibsted Grotesk"';
+  g.font = '900 60px "Helvetica Neue", Helvetica, Arimo, Arial';
   g.fillStyle = "#ff5a4a";
   g.textBaseline = "middle";
   g.fillText("BRENDAN NUSSENBLATT ◆ DESIGNER ◆ NEW YORK ◆ NOW SHOWING ◆ ", 20, 50);
@@ -943,9 +943,9 @@ const BOARDS = [
   { ad: "journey",   pos: [0, 48, -40.3],   rotY: 0, w: 8.6, h: 10.4 },
   { ad: "spider",    pos: [0, 36.5, -40.3], rotY: 0, w: 8.6, h: 10.4 },
   { ad: "ots",       pos: [0, 25, -40.3],   rotY: 0, w: 8.6, h: 10.4 },
-  { ad: "about",     pos: [-13.6, 32, 0],   rotY: 0.72, w: 11, h: 14.5 },
-  { ad: "brandinos", pos: [-9.9, 27, -30], rotY: 0.72, w: 13, h: 8.6 },
-  { ad: "draft",     pos: [-13.6, 46, -26], rotY: 0.7, w: 13, h: 8.8 },
+  { ad: "about",     pos: [-13.6, 36, 0],   rotY: 0.72, w: 11, h: 14.5 },
+  { ad: "brandinos", pos: [-9.9, 30, -30], rotY: 0.72, w: 13, h: 8.6 },
+  { ad: "draft",     pos: [-13.6, 49.5, -26], rotY: 0.7, w: 13, h: 8.8 },
   { ad: "lego",      pos: [13.6, 32, 0],    rotY: -0.72, w: 11, h: 14.5 },
   { ad: "vr",        pos: [10.6, 28, -30], rotY: -0.72, w: 8.5, h: 11 },
   { ad: "robot",     pos: [13.6, 46.5, -24],  rotY: -0.7, w: 8.5, h: 10.5 },
@@ -957,10 +957,10 @@ const frameMat = new THREE.MeshLambertMaterial({ color: "#0a0918", flatShading: 
 
 async function buildBoards() {
   await Promise.all([
-    document.fonts.load('900 100px "Schibsted Grotesk"'),
-    document.fonts.load('800 100px "Schibsted Grotesk"'),
-    document.fonts.load('900 60px "Schibsted Grotesk"'),
-    document.fonts.load('600 40px "Schibsted Grotesk"'),
+    document.fonts.load('900 100px Arimo'),
+    document.fonts.load('800 100px Arimo'),
+    document.fonts.load('900 60px Arimo'),
+    document.fonts.load('600 40px Arimo'),
   ]).catch(() => {});
 
   for (const b of BOARDS) {
