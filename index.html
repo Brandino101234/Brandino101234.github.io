@@ -14,12 +14,12 @@
   <meta property="og:url" content="https://brandino101234.github.io/" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta property="og:type" content="website" />
-  <meta name="theme-color" content="#0f0c24" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%230f0c24'/><text x='50%' y='56%' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-weight='800' font-size='30' fill='%23ffffff'>BN</text></svg>" />
+  <meta name="theme-color" content="#111111" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23111111'/><text x='50%' y='56%' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-weight='800' font-size='30' fill='%23ffffff'>BN</text></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&display=swap" />
-  <link rel="stylesheet" href="./css/style.css?v=mta6" />
+  <link rel="stylesheet" href="./css/style.css?v=mta8" />
 </head>
 <body class="home">
 
@@ -66,6 +66,25 @@
     </section>
 
     <!-- Street level: the plain-spoken part -->
+    <!-- Going down into the station: a tiled wall with the station sign -->
+    <div class="station-wall" aria-label="Times Sq-42 St">
+      <div class="mosaic-band" aria-hidden="true"></div>
+      <div class="station-sign">
+        <span class="station-name">Times Sq-42 St</span>
+        <ul class="routes station-routes" aria-label="Trains at this station">
+          <li style="background:#ee352e">1</li>
+          <li style="background:#ee352e">2</li>
+          <li style="background:#ee352e">3</li>
+          <li style="background:#b933ad">7</li>
+          <li style="background:#0039a6">A</li>
+          <li style="background:#0039a6">C</li>
+          <li style="background:#0039a6">E</li>
+          <li style="background:#808183">S</li>
+        </ul>
+      </div>
+      <div class="mosaic-band" aria-hidden="true"></div>
+    </div>
+
     <div class="container street">
       <section class="intro">
         <h2>Hi, I'm Brendan</h2>
@@ -84,12 +103,12 @@
 
       <section class="section" id="projects">
         <h2>Projects</h2>
-        <ol class="playbill">
+        <ol class="playbill strip-map">
           <li><a href="https://zion.luddy.indiana.edu/info-capstone-2026/journey" target="_blank" rel="noopener" style="--dot:#00933c;--dot-ink:#fff"><strong data-line="4">Journey</strong><span>Capstone. Child growth and nutrition tracking for parents and healthcare providers.</span></a></li>
-          <li><a href="projects/spiderman.html" style="--dot:#ee352e;--dot-ink:#fff"><strong data-line="1">Spider-History</strong><span>Web design. A 12-page Spider-Man archive organized by decade, creators, and villains.</span></a></li>
+          <li><a href="projects/spiderman.html" style="--dot:#ee352e;--dot-ink:#fff"><strong data-line="3">Spider-History</strong><span>Web design. A 12-page Spider-Man archive organized by decade, creators, and villains.</span></a></li>
           <li><a href="about.html" style="--dot:#ff6319;--dot-ink:#fff"><strong data-line="B">BrandinosBuilds</strong><span>Brand and content design. Thumbnails, channel art, and series formats for a LEGO brand on TikTok, Instagram, and YouTube.</span></a></li>
           <li><a href="https://brandino101234.github.io/lego-intelligence-agent/" target="_blank" rel="noopener" style="--dot:#ee352e;--dot-ink:#fff"><strong data-line="2">LEGO Intelligence Agent</strong><span>Dashboard. Tracks LEGO releases and retiring sets, rebuilt automatically by Python scrapers.</span></a></li>
-          <li><a href="projects/fortnite.html" style="--dot:#0039a6;--dot-ink:#fff"><strong data-line="A">Fortnite × One Times Square</strong><span>Fly Studio. A New Year's Eve Fortnite Creative map that reached 2M+ views.</span></a></li>
+          <li><a href="projects/fortnite.html" style="--dot:#ee352e;--dot-ink:#fff"><strong data-line="1">Fortnite × One Times Square</strong><span>Fly Studio. A New Year's Eve Fortnite Creative map that reached 2M+ views.</span></a></li>
           <li><a href="https://www.youtube.com/watch?v=U2gG0RcOsK4" target="_blank" rel="noopener" style="--dot:#b933ad;--dot-ink:#fff"><strong data-line="7">Mindfulness in VR</strong><span>Unity. An immersive meditation experience.</span></a></li>
           <li><a href="https://draft-dna.streamlit.app" target="_blank" rel="noopener" style="--dot:#0039a6;--dot-ink:#fff"><strong data-line="C">Draft DNA</strong><span>Data app. NBA draft analytics with prospect cards for 1,833 picks.</span></a></li>
           <li><a href="projects/robot.html" style="--dot:#6cbe45;--dot-ink:#fff"><strong data-line="G">Arduino Tank Robot</strong><span>Hardware. A servo-driven tank robot with custom control logic.</span></a></li>
@@ -152,7 +171,7 @@
       }
     }
   </script>
-  <script type="module" src="js/city.js?v=38"></script>
+  <script type="module" src="js/city.js?v=39"></script>
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>

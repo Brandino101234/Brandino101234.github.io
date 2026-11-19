@@ -73,6 +73,7 @@ const ADS = [
     img: "assets/images/about/nasdaq.jpg", focusY: 0.35,
     bg: "#14213d", dark: "#0a1122", light: "#cfdcff", ink: "#ffffff",
     href: "about.html",
+    fullColor: true,
     blurb: "I'm a designer and Informatics graduate from Indiana University, with minors in Business and Financial Literacy from the Kelley School. Outside of work: LEGO, triathlons, and basketball." },
   { id: "resume", kind: "led", title: "Resume", kicker: "PDF, one page", headline: "Now hiring?", sub: "Read the resume",
     href: "assets/resume/brendan-nussenblatt-resume.pdf", external: true,
