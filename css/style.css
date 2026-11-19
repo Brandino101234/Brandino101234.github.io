@@ -10,13 +10,13 @@
   --text: #c8c4e0;           /* body */
   --muted: #8f8aad;
   --rule: #2c2852;
-  --link: #ffb020;           /* LED amber */
-  --link-hover: #ffcb66;
+  --link: #ffffff;
+  --link-hover: #c9d4ff;
 
-  --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
-  --body: "Archivo", "Helvetica Neue", Arial, sans-serif;
-  --sign: "Big Shoulders Display", "Archivo Narrow", Impact, sans-serif;
-  --led: "Doto", "Courier New", monospace;
+  --display: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --body: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --sign: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --led: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
 
   --max: 1240px;
   --gutter: clamp(16px, 4vw, 40px);
@@ -44,9 +44,10 @@ a:hover { color: var(--link-hover); text-decoration-thickness: 2px; }
 :focus-visible { outline: 2px solid var(--link); outline-offset: 3px; }
 
 h1, h2, h3 {
-  font-family: var(--sign);
+  font-family: var(--display);
   color: var(--ink);
-  font-weight: 800;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   line-height: 1.1;
   margin: 0;
 }
@@ -79,7 +80,7 @@ p { margin: 0 0 1em; max-width: 68ch; }
 
 .nav { display: flex; gap: 22px; flex-wrap: wrap; justify-content: flex-end; }
 .nav a { color: var(--text); text-decoration: none; }
-.nav a:hover { color: var(--link); text-decoration: underline; }
+.nav a:hover { color: #ffffff; text-decoration: underline; }
 .nav a[aria-current="page"] { color: var(--ink); font-weight: 700; }
 
 /* ---------- Hero: full-width photo, then name beside the intro ---------- */
@@ -103,7 +104,6 @@ p { margin: 0 0 1em; max-width: 68ch; }
   font-weight: 900;
   letter-spacing: 0;
   line-height: 0.9;
-  text-transform: uppercase;
   margin: 0;
 }
 
@@ -136,8 +136,8 @@ p { margin: 0 0 1em; max-width: 68ch; }
 .button {
   display: inline-block;
   padding: 12px 22px;
-  background: var(--link);
-  color: #1a1205;
+  background: #ffffff;
+  color: #0f0c24;
   font-family: var(--display);
   font-weight: 700;
   font-size: 1rem;
@@ -145,7 +145,7 @@ p { margin: 0 0 1em; max-width: 68ch; }
   border-radius: 3px;
 }
 
-.button:hover { background: var(--link-hover); color: #1a1205; }
+.button:hover { background: #c9d4ff; color: #0f0c24; }
 
 .text-link { font-family: var(--display); font-weight: 600; font-size: 1rem; }
 
@@ -194,7 +194,7 @@ p { margin: 0 0 1em; max-width: 68ch; }
 }
 
 .listing h3 a { color: var(--ink); text-decoration: none; }
-.listing h3 a:hover { color: var(--link); }
+.listing h3 a:hover { text-decoration: underline; }
 
 .listing-body p { color: var(--text); }
 
@@ -270,12 +270,12 @@ p { margin: 0 0 1em; max-width: 68ch; }
   color: var(--ink);
   text-decoration: underline;
   text-decoration-thickness: 3px;
-  text-decoration-color: var(--link);
+  text-decoration-color: rgba(255, 255, 255, 0.5);
   text-underline-offset: 0.16em;
   overflow-wrap: anywhere;
 }
 
-.contact-email:hover { color: var(--link); text-decoration-thickness: 3px; }
+.contact-email:hover { color: var(--link-hover); text-decoration-color: var(--link-hover); }
 
 .site-footer {
   border-top: 1px solid var(--rule);
@@ -297,7 +297,6 @@ p { margin: 0 0 1em; max-width: 68ch; }
   font-size: clamp(2.6rem, 7vw, 5.4rem);
   font-weight: 900;
   line-height: 0.92;
-  text-transform: uppercase;
   margin-bottom: 20px;
   max-width: 16ch;
 }
@@ -399,10 +398,11 @@ p { margin: 0 0 1em; max-width: 68ch; }
 }
 
 .city-overlay h1 {
-  font-size: clamp(2.2rem, 4.2vw, 3.6rem);
-  font-weight: 900;
-  line-height: 0.9;
-  text-transform: uppercase;
+  font-size: clamp(2rem, 3.4vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  white-space: nowrap;
   color: #fff;
 }
 
@@ -417,8 +417,8 @@ p { margin: 0 0 1em; max-width: 68ch; }
   z-index: 3;
   transform: translate(14px, -130%);
   padding: 6px 12px;
-  background: #ffb020;
-  color: #1a1205;
+  background: #ffffff;
+  color: #0f0c24;
   font-family: var(--display);
   font-weight: 700;
   font-size: 0.95rem;
@@ -449,8 +449,8 @@ p { margin: 0 0 1em; max-width: 68ch; }
 }
 
 .city-panel.is-open { opacity: 1; transform: translate(0, -50%); }
-.city-panel .kicker { display: block; color: var(--link); font-family: var(--display); font-weight: 700; font-size: 0.85rem; margin-bottom: 6px; }
-.city-panel h2 { font-size: 2.2rem; line-height: 0.95; text-transform: uppercase; margin-bottom: 12px; }
+.city-panel .kicker { display: block; color: var(--muted); font-family: var(--display); font-weight: 700; font-size: 0.85rem; margin-bottom: 6px; }
+.city-panel h2 { font-size: 2.2rem; line-height: 0.95; margin-bottom: 12px; }
 .city-panel p { color: var(--text); font-size: 1rem; margin-bottom: 20px; }
 
 button.text-link {
@@ -476,14 +476,21 @@ button.text-link {
 .playbill li:last-child { border-bottom: 1px solid var(--rule); }
 .playbill a {
   display: grid;
-  grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
   gap: 6px 32px;
   padding: 16px 0;
   color: var(--text);
   text-decoration: none;
 }
-.playbill strong { font-family: var(--sign); font-weight: 800; font-size: 1.5rem; color: var(--ink); text-transform: uppercase; line-height: 1.05; }
-.playbill a:hover strong { color: var(--link); }
+.playbill strong { display: flex; align-items: center; gap: 12px; font-family: var(--display); font-weight: 700; font-size: 1.25rem; letter-spacing: -0.01em; color: var(--ink); line-height: 1.2; }
+.playbill strong::before {
+  counter-increment: show; content: counter(show);
+  display: inline-grid; place-items: center; flex: none;
+  width: 1.9rem; height: 1.9rem; border-radius: 50%;
+  background: var(--dot, #fff); color: var(--dot-ink, #fff);
+  font-size: 1rem; font-weight: 800; letter-spacing: 0;
+}
+.playbill a:hover strong { text-decoration: underline; text-underline-offset: 0.18em; }
 
 /* Street level */
 .street { padding-top: clamp(48px, 7vw, 96px); }
@@ -495,7 +502,7 @@ button.text-link {
   padding-bottom: clamp(48px, 7vw, 88px);
 }
 
-.intro h2 { font-size: clamp(2.6rem, 5vw, 4rem); line-height: 0.95; text-transform: uppercase; }
+.intro h2 { font-size: clamp(2.6rem, 5vw, 4rem); line-height: 0.95; }
 .intro p { font-size: clamp(1.1rem, 1.6vw, 1.3rem); color: var(--ink); margin-bottom: 28px; }
 
 @media (max-width: 620px) {

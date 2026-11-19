@@ -18,58 +18,60 @@ const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").match
 // Each ad: what it links to, its two-tone palette, and its copy.
 const ADS = [
   { id: "name", kind: "name" },
-  { id: "journey", title: "Journey", kicker: "Capstone, 2026", headline: "Every inch counts.",
+  { id: "journey", title: "Journey", kicker: "Capstone, 2026", headline: "Every inch counts",
     sub: "Child growth and nutrition, made clear for parents and doctors.",
     art: "journey",
     bg: "#0e4d33", dark: "#06281a", light: "#8ff0b4", ink: "#ffffff",
     href: "https://zion.luddy.indiana.edu/info-capstone-2026/journey", external: true,
     blurb: "My Informatics capstone at Indiana University: a platform that helps parents and healthcare providers track a child's growth and nutrition, spot concerning trends early, and get health alerts." },
-  { id: "spider", title: "Spider-History", kicker: "Web design", headline: "60 years. One web.",
+  { id: "spider", title: "Spider-History", kicker: "Web design", headline: "60 years, one web",
     sub: "A 12-page archive of Spider-Man's history.",
     img: "assets/images/swinging_spiderman_cover.webp",
     bg: "#b5121b", dark: "#3d0509", light: "#ffd84a", ink: "#ffffff",
     href: "projects/spiderman.html",
+    fullColor: true,
     blurb: "A multi-page site that organizes Spider-Man's history by decade, creators, and villains, built around clear information architecture and consistent navigation." },
-  { id: "ots", title: "Fortnite × One Times Square", kicker: "Fly Studio", headline: "2 million views. One ball drop.",
+  { id: "ots", title: "Fortnite × One Times Square", kicker: "Fly Studio", headline: "2 million views, one ball drop",
     sub: "A New Year's Eve Fortnite map for Times Square.",
     img: "assets/images/OTS2.jpg",
     bg: "#1f2bd8", dark: "#0a0d45", light: "#ff5ad6", ink: "#ffffff",
     href: "projects/fortnite.html",
+    fullColor: true,
     blurb: "At Fly Studio I designed and launched a custom Fortnite Creative map for a New Year's Eve campaign with One Times Square. It reached 2M+ views on Fortnite's official Instagram." },
-  { id: "lego", title: "LEGO Intelligence Agent", kicker: "Dashboard", headline: "Never miss a brick.",
+  { id: "lego", title: "LEGO Intelligence Agent", kicker: "Dashboard", headline: "Never miss a brick",
     sub: "Release dates and retiring sets, tracked automatically.",
     art: "lego",
-    bg: "#ffcc00", dark: "#1b1300", light: "#fff3b0", ink: "#1b1300",
+    bg: "#d01012", dark: "#2a0405", light: "#ffd6d2", ink: "#ffffff",
     href: "https://brandino101234.github.io/lego-intelligence-agent/", external: true,
     blurb: "A dashboard that tracks upcoming LEGO releases, sets about to retire, gifts with purchase, and the BrickLink Designer Program. Python scrapers run on a schedule and rebuild it automatically." },
-  { id: "brandinos", title: "BrandinosBuilds", kicker: "Brand and content design", headline: "Brick by brick.",
+  { id: "brandinos", title: "BrandinosBuilds", kicker: "Brand and content design", headline: "Brick by brick",
     sub: "Thumbnails, channel art, and series formats for a LEGO brand.",
     art: "brandinos",
     bg: "#ff5a1f", dark: "#3a1103", light: "#ffe2c9", ink: "#ffffff",
     href: "about.html",
     blurb: "I founded BrandinosBuilds and design all of its visual content across TikTok, Instagram, and YouTube: thumbnails, channel art, in-video graphics, and recurring series like Brick Blur." },
-  { id: "vr", title: "Mindfulness in VR", kicker: "VR, Unity", headline: "Breathe in. Log out.",
+  { id: "vr", title: "Mindfulness in VR", kicker: "VR, Unity", headline: "Breathe in, log out",
     sub: "An immersive meditation experience.",
     art: "vr",
     bg: "#5a2bd6", dark: "#1a0b47", light: "#a6ecff", ink: "#ffffff",
     href: "https://www.youtube.com/watch?v=U2gG0RcOsK4", external: true,
     blurb: "A virtual reality meditation experience built in Unity, with interactive environments and calming visuals designed to help people relax." },
-  { id: "draft", title: "Draft DNA", kicker: "Data app", headline: "Draft night, decoded.",
+  { id: "draft", title: "Draft DNA", kicker: "Data app", headline: "Draft night, decoded",
     sub: "Career projections for 1,833 NBA picks.",
     art: "draft",
     bg: "#0d1530", dark: "#06102a", light: "#4aa3ff", ink: "#ffffff",
     href: "https://draft-dna.streamlit.app", external: true,
     blurb: "An NBA draft analytics app. Every pick since 1996 gets a projection from draft-night data only, then a grade as his career unfolds, with prospect cards for 1,833 players." },
-  { id: "robot", title: "Arduino Tank Robot", kicker: "Hardware", headline: "Meet Turny.",
+  { id: "robot", title: "Arduino Tank Robot", kicker: "Hardware", headline: "Meet Turny",
     sub: "A servo-driven tank robot.",
     art: "robot",
     bg: "#c6ff3d", dark: "#14213d", light: "#f4ffd6", ink: "#14213d",
     href: "projects/robot.html",
     blurb: "A small tank robot I built with Arduino and servo motors, with button-triggered movement sequences and a lot of hardware debugging." },
-  { id: "about", title: "About me", kicker: "Indiana University, 2026", headline: "Hi, I'm Brendan.",
+  { id: "about", title: "About me", kicker: "Indiana University, 2026", headline: "Hi, I'm Brendan",
     sub: "Designer. LEGO builder. IRONMAN 70.3 finisher.",
     img: "assets/images/about/sample-gates.jpg", focusY: 0.3,
-    bg: "#14213d", dark: "#0a1122", light: "#ffcf5a", ink: "#ffffff",
+    bg: "#14213d", dark: "#0a1122", light: "#cfdcff", ink: "#ffffff",
     href: "about.html",
     blurb: "I'm a designer and Informatics graduate from Indiana University, with minors in Business and Financial Literacy from the Kelley School. Outside of work: LEGO, triathlons, and basketball." },
   { id: "resume", kind: "led", title: "Resume", kicker: "PDF, one page", headline: "Now hiring?", sub: "Read the resume",
@@ -95,6 +97,17 @@ function hexToRgb(hex) {
 
 // Draw an image into a box as a two-tone (duotone) print, so photos and
 // screenshots all share one look.
+// Draw a photo in its own colors (cover crop)
+function drawFull(ctx, img, x, y, w, h, focusY = 0.5) {
+  if (!img) return;
+  const r = Math.max(w / img.width, h / img.height);
+  const iw = img.width * r, ih = img.height * r;
+  ctx.save();
+  ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
+  ctx.drawImage(img, x + (w - iw) / 2, y + (h - ih) * focusY, iw, ih);
+  ctx.restore();
+}
+
 function drawDuotone(ctx, img, x, y, w, h, dark, light, fit = "cover", focusY = 0.5) {
   const off = document.createElement("canvas");
   off.width = Math.max(1, Math.round(w));
@@ -170,7 +183,7 @@ function drawDraftArt(ctx, x, y, w, h, ad) {
   // Labels under the bar
   ctx.fillStyle = "#ffffff";
   ctx.textBaseline = "top";
-  ctx.font = `800 ${Math.round(h * 0.055)}px "Big Shoulders Display"`;
+  ctx.font = `800 ${Math.round(h * 0.055)}px "Schibsted Grotesk"`;
   ctx.textAlign = "left";
   ctx.fillText("FLOOR", lo - h * 0.02, barY + h * 0.05);
   ctx.textAlign = "right";
@@ -227,14 +240,14 @@ function drawLegoArt(ctx, x, y, w, h, ad) {
     ctx.fillStyle = i === 0 ? ad.dark : "#ffffff";
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
-    ctx.font = `700 ${Math.round(tileH * 0.24)}px "Archivo", sans-serif`;
+    ctx.font = `700 ${Math.round(tileH * 0.24)}px "Schibsted Grotesk"`;
     ctx.fillText(m, tx + tileW / 2, stripY + tileH * 0.12);
-    ctx.font = `900 ${Math.round(tileH * 0.5)}px "Big Shoulders Display"`;
+    ctx.font = `900 ${Math.round(tileH * 0.5)}px "Schibsted Grotesk"`;
     ctx.fillText(d, tx + tileW / 2, stripY + tileH * 0.4);
   });
 
   // Tags above the first and last tiles
-  ctx.font = `800 ${Math.round(h * 0.05)}px "Big Shoulders Display"`;
+  ctx.font = `800 ${Math.round(h * 0.05)}px "Schibsted Grotesk"`;
   ctx.textAlign = "left";
   ctx.fillStyle = "#ffcc00";
   ctx.fillText("NEW", x + w * 0.07, stripY - h * 0.065);
@@ -256,7 +269,7 @@ function artFrame(ctx, x, y, w, h, ad) {
   ctx.fillRect(x, y, w, h);
 }
 function artLabel(ctx, text, tx, ty, size, color, align = "left") {
-  ctx.font = `800 ${Math.round(size)}px "Big Shoulders Display"`;
+  ctx.font = `800 ${Math.round(size)}px "Schibsted Grotesk"`;
   ctx.fillStyle = color;
   ctx.textAlign = align;
   ctx.textBaseline = "top";
@@ -274,7 +287,7 @@ function drawJourneyArt(ctx, x, y, w, h, ad) {
     ctx.beginPath(); ctx.moveTo(gx, gy + (gh / 5) * i); ctx.lineTo(gx + gw, gy + (gh / 5) * i); ctx.stroke();
   }
   // Ruler down the left side
-  ctx.fillStyle = "#ffcf5a";
+  ctx.fillStyle = "#e8fff1";
   ctx.fillRect(x + w * 0.06, gy, w * 0.07, gh);
   ctx.fillStyle = ad.dark;
   for (let i = 0; i <= 20; i++) {
@@ -290,7 +303,7 @@ function drawJourneyArt(ctx, x, y, w, h, ad) {
   pts.forEach(([px, py], i) => (i ? ctx.lineTo(px, py) : ctx.moveTo(px, py)));
   ctx.stroke();
   pts.forEach(([px, py], i) => {
-    ctx.fillStyle = i === pts.length - 1 ? "#ffcf5a" : "#ffffff";
+    ctx.fillStyle = i === pts.length - 1 ? "#e8fff1" : "#ffffff";
     ctx.beginPath(); ctx.arc(px, py, h * (i === pts.length - 1 ? 0.03 : 0.018), 0, Math.PI * 2); ctx.fill();
   });
   artLabel(ctx, "AGE", gx + gw, gy + gh + h * 0.03, h * 0.06, ad.light, "right");
@@ -376,7 +389,7 @@ function drawOtsArt(ctx, x, y, w, h, ad) {
   }
   ctx.beginPath(); ctx.arc(bx, by, br * 0.55, 0, Math.PI * 2); ctx.stroke();
   // 2M+
-  ctx.font = `900 ${Math.round(h * 0.2)}px "Big Shoulders Display"`;
+  ctx.font = `900 ${Math.round(h * 0.2)}px "Schibsted Grotesk"`;
   ctx.fillStyle = "#ffffff";
   ctx.textAlign = "left";
   ctx.textBaseline = "top";
@@ -475,7 +488,13 @@ function drawBrandinosArt(ctx, x, y, w, h, ad) {
   ctx.lineTo(fx + fw / 2 - fh * 0.06, fy + fh / 2 + fh * 0.1);
   ctx.closePath();
   ctx.fill();
-  artLabel(ctx, "TIKTOK  INSTAGRAM  YOUTUBE", x + w / 2, fy + fh + h * 0.05, h * 0.055, ad.light, "center");
+  let ls = h * 0.055;
+  ctx.font = `700 ${Math.round(ls)}px "Schibsted Grotesk"`;
+  while (ctx.measureText("TikTok   Instagram   YouTube").width > fw && ls > 8) {
+    ls -= 1;
+    ctx.font = `700 ${Math.round(ls)}px "Schibsted Grotesk"`;
+  }
+  artLabel(ctx, "TikTok   Instagram   YouTube", x + w / 2, fy + fh + h * 0.05, ls, ad.light, "center");
   ctx.restore();
 }
 
@@ -502,8 +521,8 @@ function fitHeadline(ctx, text, maxW, maxH, startSize) {
   let size = startSize;
   let lines;
   do {
-    ctx.font = `900 ${size}px "Big Shoulders Display"`;
-    lines = wrap(ctx, text.toUpperCase(), maxW);
+    ctx.font = `700 ${size}px "Schibsted Grotesk"`;
+    lines = wrap(ctx, text, maxW);
     const widest = Math.max(...lines.map((l) => ctx.measureText(l).width));
     if (lines.length * size * 0.92 <= maxH && widest <= maxW) break;
     size -= 4;
@@ -526,25 +545,25 @@ async function makeAdTexture(ad, aspect) {
     const { size, lines } = fitHeadline(ctx, "Brendan Nussenblatt", W - pad * 2, H * 0.6, 260);
     ctx.textBaseline = "top";
     lines.forEach((l, i) => ctx.fillText(l, pad, pad * 1.4 + i * size * 0.92));
-    ctx.font = `900 ${Math.round(H * 0.07)}px "Doto", monospace`;
-    ctx.fillStyle = "#ffcf5a";
-    ctx.fillText("DESIGNER, NEW YORK", pad, H - pad - H * 0.08);
+    ctx.font = `900 ${Math.round(H * 0.07)}px "Schibsted Grotesk"`;
+    ctx.fillStyle = "#bcd0ff";
+    ctx.fillText("Designer, New York", pad, H - pad - H * 0.08);
     return new THREE.CanvasTexture(c);
   }
 
   if (ad.kind === "led") {
     ctx.fillStyle = "#050505";
     ctx.fillRect(0, 0, W, H);
-    ctx.fillStyle = "rgba(255,176,32,0.10)";
+    ctx.fillStyle = "rgba(255,90,74,0.10)";
     for (let y = 6; y < H; y += 14) for (let x = 6; x < W; x += 14) ctx.fillRect(x, y, 4, 4);
-    ctx.fillStyle = "#ffb020";
-    ctx.shadowColor = "rgba(255,176,32,0.8)";
+    ctx.fillStyle = "#ff5a4a";
+    ctx.shadowColor = "rgba(255,90,74,0.8)";
     ctx.shadowBlur = 24;
     ctx.textBaseline = "top";
-    ctx.font = `900 ${Math.round(H * 0.11)}px "Doto", monospace`;
-    ctx.fillText(ad.headline.toUpperCase(), pad, H * 0.28);
+    ctx.font = `900 ${Math.round(H * 0.11)}px "Schibsted Grotesk"`;
+    ctx.fillText(ad.headline, pad, H * 0.28);
     const big = fitHeadline(ctx, ad.sub, W - pad * 2, H * 0.4, 220);
-    ctx.font = `900 ${big.size}px "Doto", monospace`;
+    ctx.font = `900 ${big.size}px "Schibsted Grotesk"`;
     big.lines.forEach((l, i) => ctx.fillText(l, pad, H * 0.45 + i * big.size));
     return new THREE.CanvasTexture(c);
   }
@@ -560,11 +579,13 @@ async function makeAdTexture(ad, aspect) {
   if (landscape) {
     const imgW = Math.round(W * 0.5);
     if (ART[ad.art]) ART[ad.art](ctx, 0, 0, imgW, H - footerH, ad);
+    else if (ad.fullColor) drawFull(ctx, img, 0, 0, imgW, H - footerH, ad.focusY);
     else drawDuotone(ctx, img, 0, 0, imgW, H - footerH, ad.dark, ad.light, ad.fit, ad.focusY);
     textX = imgW + pad; textY = pad; textW = W - imgW - pad * 2; textH = H - footerH - pad * 2;
   } else {
     const imgH = Math.round(H * 0.5);
     if (ART[ad.art]) ART[ad.art](ctx, 0, 0, W, imgH, ad);
+    else if (ad.fullColor) drawFull(ctx, img, 0, 0, W, imgH, ad.focusY);
     else drawDuotone(ctx, img, 0, 0, W, imgH, ad.dark, ad.light, ad.fit, ad.focusY);
     textX = pad; textY = imgH + pad * 0.8; textW = W - pad * 2; textH = H - imgH - footerH - pad * 1.6;
   }
@@ -575,7 +596,7 @@ async function makeAdTexture(ad, aspect) {
   const subSize = Math.round(Math.min(W, H) * 0.045);
   const head = fitHeadline(ctx, ad.headline, textW, textH - subSize * 3.2, landscape ? 200 : 170);
   head.lines.forEach((l, i) => ctx.fillText(l, textX, textY + i * head.size * 0.92));
-  ctx.font = `600 ${subSize}px "Archivo", sans-serif`;
+  ctx.font = `600 ${subSize}px "Schibsted Grotesk"`;
   ctx.globalAlpha = 0.9;
   const subLines = wrap(ctx, ad.sub, textW);
   const subY = textY + head.lines.length * head.size * 0.92 + subSize * 0.8;
@@ -586,9 +607,9 @@ async function makeAdTexture(ad, aspect) {
   ctx.fillStyle = ad.dark;
   ctx.fillRect(0, H - footerH, W, footerH);
   ctx.fillStyle = ad.light;
-  ctx.font = `800 ${Math.round(footerH * 0.5)}px "Big Shoulders Display"`;
+  ctx.font = `800 ${Math.round(footerH * 0.5)}px "Schibsted Grotesk"`;
   ctx.textBaseline = "middle";
-  ctx.fillText(ad.title.toUpperCase(), pad, H - footerH / 2);
+  ctx.fillText(ad.title, pad, H - footerH / 2);
   ctx.textAlign = "right";
   ctx.fillText("BN", W - pad, H - footerH / 2);
   ctx.textAlign = "left";
@@ -880,8 +901,8 @@ function zipperTexture() {
   const g = c.getContext("2d");
   g.fillStyle = "#050505";
   g.fillRect(0, 0, c.width, c.height);
-  g.font = '900 60px "Doto", monospace';
-  g.fillStyle = "#ffb020";
+  g.font = '900 60px "Schibsted Grotesk"';
+  g.fillStyle = "#ff5a4a";
   g.textBaseline = "middle";
   g.fillText("BRENDAN NUSSENBLATT ◆ DESIGNER ◆ NEW YORK ◆ NOW SHOWING ◆ ", 20, 50);
   const t = new THREE.CanvasTexture(c);
@@ -936,10 +957,10 @@ const frameMat = new THREE.MeshLambertMaterial({ color: "#0a0918", flatShading: 
 
 async function buildBoards() {
   await Promise.all([
-    document.fonts.load('900 100px "Big Shoulders Display"'),
-    document.fonts.load('800 100px "Big Shoulders Display"'),
-    document.fonts.load('900 60px "Doto"'),
-    document.fonts.load('600 40px "Archivo"'),
+    document.fonts.load('900 100px "Schibsted Grotesk"'),
+    document.fonts.load('800 100px "Schibsted Grotesk"'),
+    document.fonts.load('900 60px "Schibsted Grotesk"'),
+    document.fonts.load('600 40px "Schibsted Grotesk"'),
   ]).catch(() => {});
 
   for (const b of BOARDS) {
