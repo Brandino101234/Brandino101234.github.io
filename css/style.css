@@ -823,3 +823,33 @@ button.text-link {
   .direction { grid-template-columns: 2.6rem minmax(0, 1fr); padding: 16px; row-gap: 2px; }
   .dir-detail { grid-column: 2; font-size: 0.9rem; }
 }
+
+/* ==========================================================
+   About page: station wall, timetable cards, platform posters
+   ========================================================== */
+
+/* The wall sits right under the header, full width */
+.station-wall .station-sign h1.station-name { margin: 0; color: #fff; }
+.about-hero { padding-top: clamp(32px, 5vw, 56px); }
+.about-hero .hero-text { grid-template-columns: 1fr; }
+.about-hero .hero-text p { grid-column: 1; max-width: 62ch; }
+
+/* Skills, credentials, and fact tables: black sign panels with the white rule */
+.skills, .specs {
+  background: linear-gradient(#000 0 8px, #fff 8px 10px, #000 10px) top / 100% 10px no-repeat, #000;
+  color: #fff;
+  border-radius: 2px;
+  padding-top: 10px;
+  border-top: 0;
+  overflow: hidden;
+  align-self: start;
+}
+.skills div, .specs div { padding: 13px 18px; border-top: 1px solid #262626; border-bottom: 0 !important; background: none !important; }
+.skills div:first-child, .specs div:first-child { border-top: 0; }
+.skills dt { color: #fff; font-size: 1rem; }
+.skills dd { color: #bdbdbd; }
+.specs dt { color: #9b9b9b; }
+.specs dd { color: #fff; }
+.specs dd a { color: #fff; }
+
+

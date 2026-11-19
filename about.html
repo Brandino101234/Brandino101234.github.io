@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&display=swap" />
-  <link rel="stylesheet" href="./css/style.css?v=mta11" />
+  <link rel="stylesheet" href="./css/style.css?v=mta15" />
 </head>
 <body>
 
@@ -29,11 +29,24 @@
     </div>
   </header>
 
+  <div class="station-wall">
+    <div class="mosaic-band" aria-hidden="true"></div>
+    <div class="station-sign">
+      <h1 class="station-name">About me</h1>
+      <ul class="routes station-routes" aria-label="Kinds of work">
+        <li style="background:#0039a6" title="UI/UX design">A</li>
+        <li style="background:#ee352e" title="Web">1</li>
+        <li style="background:#ff6319" title="Brand and content">B</li>
+        <li style="background:#b933ad" title="Data">7</li>
+      </ul>
+    </div>
+    <div class="mosaic-band" aria-hidden="true"></div>
+  </div>
+
   <main class="container">
 
-    <section class="hero">
+    <section class="hero about-hero">
       <div class="hero-text">
-        <h1>About me</h1>
         <p>
           I graduated from Indiana University in 2026 with a degree in Informatics and minors in Business
           and Financial Literacy. Away from work you'll find me reviewing LEGO sets, racing triathlons,
@@ -154,12 +167,29 @@
 
     <section class="section" id="contact">
       <h2>Contact</h2>
-      <p>Email is the best way to reach me.</p>
-      <a class="contact-email" href="mailto:brendannussenblatt@gmail.com">brendannussenblatt@gmail.com</a>
-      <div class="actions">
-        <a class="text-link" href="https://www.linkedin.com/in/brendannussenblatt/" target="_blank" rel="noopener">LinkedIn</a>
-        <a class="text-link" href="https://github.com/Brandino101234" target="_blank" rel="noopener">GitHub</a>
-      </div>
+      <nav class="direction-signs" aria-label="Ways to reach me">
+        <a class="direction" href="mailto:brendannussenblatt@gmail.com">
+          <span class="dir-arrow" aria-hidden="true">↗</span>
+          <span class="dir-label">Email</span>
+          <span class="dir-detail">brendannussenblatt@gmail.com</span>
+        </a>
+        <a class="direction" href="https://www.linkedin.com/in/brendannussenblatt/" target="_blank" rel="noopener">
+          <span class="dir-arrow" aria-hidden="true">↗</span>
+          <span class="dir-label">LinkedIn</span>
+          <span class="dir-detail">linkedin.com/in/brendannussenblatt</span>
+        </a>
+        <a class="direction" href="https://github.com/Brandino101234" target="_blank" rel="noopener">
+          <span class="dir-arrow" aria-hidden="true">↗</span>
+          <span class="dir-label">GitHub</span>
+          <span class="dir-detail">github.com/Brandino101234</span>
+        </a>
+        <a class="direction" href="assets/resume/brendan-nussenblatt-resume.pdf" target="_blank" rel="noopener">
+          <span class="dir-arrow" aria-hidden="true">↗</span>
+          <span class="dir-label">Resume</span>
+          <span class="dir-detail">One page, PDF</span>
+        </a>
+      </nav>
+      <p class="dir-note">Email is the best way to reach me.</p>
     </section>
 
   </main>
