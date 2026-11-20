@@ -853,3 +853,72 @@ button.text-link {
 .specs dd a { color: #fff; }
 
 
+
+/* ==========================================================
+   Project pages
+   ========================================================== */
+
+.station-wall .station-sign h1.station-name { max-width: none; }
+.subway-case { padding-top: clamp(24px, 4vw, 40px); }
+
+/* Back link as a small direction sign */
+.back-sign {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 26px;
+  padding: 16px 18px 10px;
+  background: linear-gradient(#000 0 6px, #fff 6px 8px, #000 8px);
+  color: #fff;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-decoration: none;
+  border-radius: 2px;
+}
+.back-sign .dir-arrow { width: 1.9rem; height: 1.9rem; font-size: 1rem; }
+.back-sign:hover span:last-child { text-decoration: underline; text-underline-offset: 0.18em; }
+
+/* Section headings in the write-up are small station signs */
+.case-grid h2 {
+  display: block;
+  padding: 16px 16px 10px;
+  background: linear-gradient(#000 0 6px, #fff 6px 8px, #000 8px);
+  color: #fff;
+  font-size: 1.3rem;
+  border-radius: 2px;
+  margin-bottom: 14px;
+}
+
+/* Demo and site links as direction-sign rows */
+.case-links {
+  display: grid;
+  gap: 0;
+  margin-top: 20px;
+  background: linear-gradient(#000 0 8px, #fff 8px 10px, #000 10px) top / 100% 10px no-repeat, #000;
+  padding-top: 10px;
+  border-radius: 2px;
+}
+.case-links a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  color: #fff;
+  text-decoration: none;
+  border-top: 1px solid #262626;
+}
+.case-links a:first-child { border-top: 0; }
+.case-links a::before {
+  content: "↗";
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  background: #fff;
+  color: #000;
+  font-weight: 700;
+}
+.case-links a:hover { text-decoration: underline; text-underline-offset: 0.18em; }
